@@ -8,6 +8,7 @@ namespace InputSystem.Interfaces
         Action OnLeft { get; set; }
         Action OnUp { get; set; }
         Action OnDown { get; set; }
+        Action OnSpace { get; set; }
         void DirectUpdate();
     }
 }
