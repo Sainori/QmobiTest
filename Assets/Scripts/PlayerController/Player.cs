@@ -42,17 +42,12 @@ namespace PlayerController
 
         private void OnUp()
         {
-            AddRelativeForce(Vector2.up);
+            _rigidbody2D.AddForce(transform.localRotation * Vector3.up);
         }
 
         private void OnDown()
         {
-            AddRelativeForce(Vector2.down);
-        }
-
-        private void AddRelativeForce(Vector2 localVector)
-        {
-            _rigidbody2D.AddForce(transform.localRotation * localVector);
+            _rigidbody2D.AddForce(_rigidbody2D.velocity * -0.5f);
         }
     }
 }
