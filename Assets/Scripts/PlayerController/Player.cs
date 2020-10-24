@@ -7,6 +7,8 @@ namespace PlayerController
     public class Player : MonoBehaviour, IPlayer
     {
         private Rigidbody2D _rigidbody2D;
+        [SerializeField] private float accelerationMultiplier = 1f;
+        [Range(0.1f, 1f)] [SerializeField] private float breakMultiplier = 0.5f; 
 
         public void Initialize(IInputSystem inputSystem)
         {
@@ -42,12 +44,12 @@ namespace PlayerController
 
         private void OnUp()
         {
-            _rigidbody2D.AddForce(transform.localRotation * Vector3.up);
+            _rigidbody2D.AddForce(transform.localRotation * Vector3.up * accelerationMultiplier);
         }
 
         private void OnDown()
         {
-            _rigidbody2D.AddForce(_rigidbody2D.velocity * -0.5f);
+            _rigidbody2D.AddForce(_rigidbody2D.velocity * -breakMultiplier);
         }
     }
 }
