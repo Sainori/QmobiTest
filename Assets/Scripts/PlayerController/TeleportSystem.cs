@@ -5,23 +5,28 @@ namespace PlayerController
 {
     public class TeleportSystem
     {
-        private Transform _targetTransform;
-        private MapCoordinates _mapCoordinates;
-        private bool isNearRight;
-        private bool isNearLeft;
-        private bool isNearUp;
-        private bool isNearDown;
+        private readonly Transform _targetTransform;
+        private readonly MapCoordinates _mapCoordinates;
+        private readonly float _teleportOffset;
+        private readonly float _cornerTolerance;
 
-        public TeleportSystem(MapCoordinates mapCoordinates, Transform targetTransform)
+        private bool _isNearOrMoreRight;
+        private bool _isNearOrMoreLeft;
+        private bool _isNearOrMoreUp;
+        private bool _isNearOrMoreDown;
+
+        public TeleportSystem(MapCoordinates mapCoordinates, Transform targetTransform, float teleportOffset = 1f,
+            float cornerTolerance = 3f)
         {
             _mapCoordinates = mapCoordinates;
             _targetTransform = targetTransform;
+            _teleportOffset = teleportOffset;
+            _cornerTolerance = cornerTolerance;
         }
 
         public void DirectUpdate()
         {
-            var isOutOfMap = IsOutOfMap(_targetTransform.position);
-            if (!isOutOfMap)
+            if (!IsOutOfMap(_targetTransform.position))
             {
                 return;
             }
@@ -46,45 +51,58 @@ namespace PlayerController
 
         private void TeleportPlayer()
         {
-            isNearRight = _targetTransform.position.x >= _mapCoordinates.RightSideBorder;
-            isNearLeft = _targetTransform.position.x <= _mapCoordinates.LeftSideBorder;
-            isNearUp = _targetTransform.position.y >= _mapCoordinates.UpSideBorder;
-            isNearDown = _targetTransform.position.y <= _mapCoordinates.DownSideBorder;
-
-            if (!(isNearDown || isNearUp || isNearLeft || isNearRight))
+            if (TryCornerTeleport())
             {
                 return;
             }
 
-            // if (IsNearCorner())
-            // {
-            // CornerTeleport();
-            // }
-
-            SideTeleport();
+            UpdateNearFlags();
+            ChangeTargetTransform();
         }
 
-        private void SideTeleport()
+        private void UpdateNearFlags(float tolerance = 0f)
+        {
+            _isNearOrMoreRight = _targetTransform.position.x + tolerance >= _mapCoordinates.RightSideBorder;
+            _isNearOrMoreLeft = _targetTransform.position.x - tolerance <= _mapCoordinates.LeftSideBorder;
+            _isNearOrMoreUp = _targetTransform.position.y + tolerance >= _mapCoordinates.UpSideBorder;
+            _isNearOrMoreDown = _targetTransform.position.y - tolerance <= _mapCoordinates.DownSideBorder;
+        }
+
+        private bool TryCornerTeleport()
+        {
+            UpdateNearFlags(_cornerTolerance);
+
+            if (!(_isNearOrMoreUp || _isNearOrMoreRight || _isNearOrMoreLeft || _isNearOrMoreDown))
+            {
+                return false;
+            }
+
+            ChangeTargetTransform();
+            return true;
+        }
+
+
+        private void ChangeTargetTransform()
         {
             var newPosition = _targetTransform.position;
-            if (isNearRight)
+            if (_isNearOrMoreRight)
             {
-                newPosition.x = _mapCoordinates.LeftSideBorder + 1;
+                newPosition.x = _mapCoordinates.LeftSideBorder + _teleportOffset;
             }
 
-            if (isNearLeft)
+            if (_isNearOrMoreLeft)
             {
-                newPosition.x = _mapCoordinates.RightSideBorder - 1;
+                newPosition.x = _mapCoordinates.RightSideBorder - _teleportOffset;
             }
 
-            if (isNearUp)
+            if (_isNearOrMoreUp)
             {
-                newPosition.y = _mapCoordinates.DownSideBorder + 1;
+                newPosition.y = _mapCoordinates.DownSideBorder + _teleportOffset;
             }
 
-            if (isNearDown)
+            if (_isNearOrMoreDown)
             {
-                newPosition.y = _mapCoordinates.UpSideBorder - 1;
+                newPosition.y = _mapCoordinates.UpSideBorder - _teleportOffset;
             }
 
             _targetTransform.position = newPosition;

@@ -277,3 +277,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 610988536171483653, guid: 3013f2e62b572488db6e86591f28dadf,
     type: 3}
+  cornerTolerance: 3
+  teleportOffset: 1
