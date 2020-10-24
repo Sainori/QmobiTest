@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     {
         _inputSystem = GetComponent<IInputSystem>();
         _playerController = GetComponent<IPlayerController>();
+
+        _playerController.Initialize(_inputSystem);
     }
 
     private void Update()
