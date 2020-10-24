@@ -9,10 +9,13 @@ namespace InputSystem
         public Action OnRight { get; set; }
         public Action OnLeft { get; set; }
         public Action OnUp { get; set; }
+
         public Action OnDown { get; set; }
 
         public void DirectUpdate()
         {
+            ProcessKeyInput(KeyCode.UpArrow, onKey: OnUp);
+            ProcessKeyInput(KeyCode.DownArrow, onKey: OnDown);
             ProcessKeyInput(KeyCode.RightArrow, onKey: OnRight);
             ProcessKeyInput(KeyCode.LeftArrow, onKey: OnLeft);
         }

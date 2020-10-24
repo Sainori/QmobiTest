@@ -11,8 +11,12 @@ namespace PlayerController
         public void Initialize(IInputSystem inputSystem)
         {
             var player = Instantiate(playerPrefab);
-            inputSystem.OnRight += () => transform.Rotate(Vector3.forward);
-            inputSystem.OnLeft += () => transform.Rotate(Vector3.back);
+            var rigidbody2D = player.GetComponent<Rigidbody2D>();
+
+            inputSystem.OnUp += () => rigidbody2D.AddForce(player.transform.localRotation * Vector2.up);
+            inputSystem.OnDown += () => rigidbody2D.AddForce(player.transform.localRotation * Vector2.down);
+            inputSystem.OnRight += () => player.transform.Rotate(Vector3.back);
+            inputSystem.OnLeft += () => player.transform.Rotate(Vector3.forward);
         }
 
         public void DirectUpdate()
