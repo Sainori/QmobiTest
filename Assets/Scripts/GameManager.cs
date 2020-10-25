@@ -1,7 +1,6 @@
 ﻿using EnemyController.Interfaces;
 using InputSystem.Interfaces;
 using PlayerController.Interfaces;
-using PlayerController.Models;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -21,6 +20,7 @@ public class GameManager : MonoBehaviour
 
         _mapCoordinates = new MapCoordinates(mainCamera);
         _playerController.Initialize(_inputSystem, _mapCoordinates);
+        _enemyController.Initialize(_mapCoordinates);
     }
 
     private void Update()

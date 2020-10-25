@@ -1,5 +1,4 @@
 using InputSystem.Interfaces;
-using PlayerController.Models;
 
 namespace PlayerController.Interfaces
 {

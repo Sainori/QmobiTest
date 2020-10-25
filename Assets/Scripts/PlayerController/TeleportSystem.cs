@@ -1,4 +1,3 @@
-using PlayerController.Models;
 using UnityEngine;
 
 namespace PlayerController

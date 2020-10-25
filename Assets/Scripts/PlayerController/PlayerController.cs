@@ -1,6 +1,5 @@
 using InputSystem.Interfaces;
 using PlayerController.Interfaces;
-using PlayerController.Models;
 using UnityEngine;
 
 namespace PlayerController
