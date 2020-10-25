@@ -34,12 +34,12 @@ namespace PlayerController
 
         private void OnLeft()
         {
-            transform.Rotate(Vector3.forward);
+            transform.Rotate(Vector3.forward * accelerationMultiplier);
         }
 
         private void OnRight()
         {
-            transform.Rotate(Vector3.back);
+            transform.Rotate(Vector3.back * accelerationMultiplier);
         }
 
         private void OnUp()

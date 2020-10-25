@@ -1,3 +1,4 @@
+using System;
 using EnemyController.Interfaces;
 using UnityEngine;
 
@@ -7,13 +8,27 @@ namespace EnemyController
     {
         private bool _justSpawned;
         private MapCoordinates _mapCoordinates;
+
         public bool IsDead { get; private set; }
+        public Action OnDestroy { get; set; } = () => { };
+        public Action OnActivate { get; set; }
+        public Action OnDeactivate { get; set; }
 
         public void Initialize(MapCoordinates mapCoordinates)
         {
             IsDead = false;
             _justSpawned = true;
             _mapCoordinates = mapCoordinates;
+        }
+
+        public void Activate()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Deactivate()
+        {
+            throw new NotImplementedException();
         }
 
         public void DirectUpdate()
@@ -47,6 +62,7 @@ namespace EnemyController
             }
 
             IsDead = true;
+            OnDestroy();
             Destroy(gameObject);
         }
     }

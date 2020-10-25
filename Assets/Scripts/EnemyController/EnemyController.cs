@@ -44,7 +44,7 @@ namespace EnemyController
             for (var index = 0; index < _enemies.Count; index++)
             {
                 var enemy = _enemies[index];
-                if (enemy == null)
+                if (enemy == null || enemy.IsDead)
                 {
                     _enemies.Remove(enemy);
                     index--;
