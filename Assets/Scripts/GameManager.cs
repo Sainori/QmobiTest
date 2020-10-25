@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private Camera _camera;
+    [SerializeField] private Camera mainCamera;
 
-    private MapCoordinates MapCoordinates;
+    private MapCoordinates _mapCoordinates;
     private IInputSystem _inputSystem;
     private IPlayerController _playerController;
 
@@ -16,17 +16,8 @@ public class GameManager : MonoBehaviour
         _inputSystem = GetComponent<IInputSystem>();
         _playerController = GetComponent<IPlayerController>();
 
-
-        SetupMapCoordinates(_camera);
-        _playerController.Initialize(_inputSystem, MapCoordinates);
-    }
-
-    private void SetupMapCoordinates(Camera camera)
-    {
-        var upRightCorner = camera.ViewportToWorldPoint(new Vector3(1, 1));
-        var downLeftCorner = camera.ViewportToWorldPoint(new Vector3(0, 0));
-
-        MapCoordinates = new MapCoordinates(upRightCorner, downLeftCorner);
+        _mapCoordinates = new MapCoordinates(mainCamera);
+        _playerController.Initialize(_inputSystem, _mapCoordinates);
     }
 
     private void Update()
