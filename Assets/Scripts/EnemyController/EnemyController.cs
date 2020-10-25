@@ -7,12 +7,15 @@ namespace EnemyController
     {
         [SerializeField] private GameObject enemyPrefab;
         [SerializeField] private float spawnPointOffset;
-        [SerializeField] private Vector3 minStartForce;
-        [SerializeField] private Vector3 maxStartForce;
+
+        [SerializeField] private float minStartForce;
+        [SerializeField] private float maxStartForce;
         private SpawnPointGenerator _spawnPointGenerator;
+        private StartForceGenerator _startForceGenerator;
 
         public void Initialize(MapCoordinates mapCoordinates)
         {
+            _startForceGenerator = new StartForceGenerator(mapCoordinates, minStartForce, maxStartForce);
             _spawnPointGenerator = new SpawnPointGenerator(mapCoordinates, spawnPointOffset);
         }
 
@@ -34,7 +37,7 @@ namespace EnemyController
 
         private void SpawnEnemy()
         {
-            //TODO: implement spawn
+            
         }
 
         private bool IsNeedToSpawnEnemy()
