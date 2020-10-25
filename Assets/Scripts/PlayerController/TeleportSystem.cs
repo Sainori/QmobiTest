@@ -26,27 +26,12 @@ namespace PlayerController
 
         public void DirectUpdate()
         {
-            if (!IsOutOfMap(_targetTransform.position))
+            if (!_mapCoordinates.IsOutOfMap(_targetTransform.position))
             {
                 return;
             }
 
             TeleportPlayer();
-        }
-
-        private bool IsOutOfMap(Vector3 position)
-        {
-            if (position.x > _mapCoordinates.RightSideBorder || position.x < _mapCoordinates.LeftSideBorder)
-            {
-                return true;
-            }
-
-            if (position.y > _mapCoordinates.UpSideBorder || position.y < _mapCoordinates.DownSideBorder)
-            {
-                return true;
-            }
-
-            return false;
         }
 
         private void TeleportPlayer()

@@ -22,5 +22,20 @@ namespace PlayerController.Models
             LeftSideBorder = downLeftCorner.x;
             DownSideBorder = downLeftCorner.y;
         }
+
+        public bool IsOutOfMap(Vector3 position)
+        {
+            if (position.x > RightSideBorder || position.x < LeftSideBorder)
+            {
+                return true;
+            }
+
+            if (position.y > UpSideBorder || position.y < DownSideBorder)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }
