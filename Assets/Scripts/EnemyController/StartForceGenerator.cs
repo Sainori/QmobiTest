@@ -15,12 +15,12 @@ namespace EnemyController
             _mapCoordinates = mapCoordinates;
         }
 
-        public Vector3 GetStartForce()
+        public Vector3 GetStartForce(Vector3 startPos)
         {
             var directionPointX = Random.Range(_mapCoordinates.LeftSideBorder, _mapCoordinates.RightSideBorder);
             var directionPointY = Random.Range(_mapCoordinates.DownSideBorder, _mapCoordinates.UpSideBorder);
-            var directionVector = new Vector3(directionPointX, directionPointY).normalized;
-            return directionVector * Random.Range(_minForce, _maxForce);
+            var directionVector = new Vector3(directionPointX, directionPointY);
+            return (directionVector - startPos).normalized * Random.Range(_minForce, _maxForce);
         }
     }
 }
