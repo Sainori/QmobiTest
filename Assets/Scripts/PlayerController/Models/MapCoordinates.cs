@@ -6,7 +6,7 @@ namespace PlayerController.Models
     {
         private readonly Vector3 _upRightViewport = new Vector3(1, 1);
         private readonly Vector3 _downLeftViewport = new Vector3(0, 0);
-        
+
         public readonly float RightSideBorder;
         public readonly float LeftSideBorder;
         public readonly float UpSideBorder;
