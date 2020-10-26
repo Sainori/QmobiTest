@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace EnemyController
 {
-    public class Enemy : MonoBehaviour, IEnemy
+    public class Asteroid : MonoBehaviour, IEnemy
     {
         private bool _justSpawned;
         private MapCoordinates _mapCoordinates;
@@ -41,11 +41,17 @@ namespace EnemyController
         public void Deactivate()
         {
             OnDeactivate();
+
             transform.position = Vector3.zero;
+            transform.rotation = Quaternion.identity;
+
             _rigidbody.velocity = Vector2.zero;
 
             OnActivate = null;
             OnDeactivate = null;
+
+            IsDead = true;
+            _justSpawned = false;
 
             gameObject.SetActive(false);
         }

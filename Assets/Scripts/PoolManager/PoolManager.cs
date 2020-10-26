@@ -27,7 +27,7 @@ namespace PoolManager
 
         public T GetPoolObject()
         {
-            var poolObject = _disabledObjects.Count != 0 ? _disabledObjects.Pop() : _createObject.Invoke(true);
+            var poolObject = _disabledObjects.Count != 0 ? _disabledObjects.Pop() : _createObject.Invoke(false);
 
             poolObject.OnActivate += () => OnActivate(poolObject);
             poolObject.OnDeactivate += () => OnDeactivate(poolObject);

@@ -15,7 +15,7 @@ namespace EnemyController
         private SpawnPointGenerator _spawnPointGenerator;
         private StartForceGenerator _startForceGenerator;
         private float _time = 0f;
-        private const float SpawnDelay = 3f;
+        private const float SpawnDelay = 0.5f;
 
 
         private List<IEnemy> _enemies = new List<IEnemy>();
@@ -34,11 +34,7 @@ namespace EnemyController
 
         private IEnemy CreateObject(bool isActive)
         {
-            var spawnPoint = _spawnPointGenerator.GetSpawnPoint();
-            var startForce = _startForceGenerator.GetStartForce(spawnPoint);
-
             var enemyObject = Instantiate(enemyPrefab);
-
             var enemy = enemyObject.GetComponent<IEnemy>();
             enemy.Initialize(_mapCoordinates, _spawnPointGenerator, _startForceGenerator);
 
@@ -65,14 +61,9 @@ namespace EnemyController
             SpawnEnemy();
         }
 
+        //TODO: think about creation with 'TRUE'
         private void SpawnEnemy()
         {
-            // var spawnPoint = _spawnPointGenerator.GetSpawnPoint();
-            // var enemyObject = Instantiate(enemyPrefab, spawnPoint, Quaternion.identity);
-            // enemyObject.GetComponent<Rigidbody2D>().AddForce(_startForceGenerator.GetStartForce(spawnPoint), ForceMode2D.Impulse);
-            // var enemy = enemyObject.GetComponent<IEnemy>();
-            // enemy.Initialize(_mapCoordinates);
-            // _enemies.Add(enemy);
             var enemy = _poolManager.GetPoolObject();
             enemy.Activate();
         }
