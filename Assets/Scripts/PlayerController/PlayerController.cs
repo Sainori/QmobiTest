@@ -17,23 +17,25 @@ namespace PlayerController
         private TeleportSystem _teleportSystem;
         private IPoolManager<Bullet> _bulletManager;
         private MapCoordinates _mapCoordinates;
+        private GameObject _playerGameObject;
 
         public void Initialize(IInputSystem inputSystem, MapCoordinates mapCoordinates)
         {
             _mapCoordinates = mapCoordinates;
-            _bulletManager = new PoolManager<Bullet>(CreateObject, 5);
+            _playerGameObject = Instantiate(playerPrefab);
+            var player = _playerGameObject.GetComponent<IPlayer>();
 
-            var playerGameObject = Instantiate(playerPrefab);
-            var player = playerGameObject.GetComponent<IPlayer>();
+            _bulletManager = new PoolManager<Bullet>(CreateObject, 5);
             player.Initialize(inputSystem, _bulletManager);
-            _teleportSystem = new TeleportSystem(_mapCoordinates, playerGameObject.transform, teleportOffset, cornerTolerance);
+
+            _teleportSystem = new TeleportSystem(_mapCoordinates, _playerGameObject.transform, teleportOffset, cornerTolerance);
         }
 
         private Bullet CreateObject(bool isActive)
         {
-            var enemyObject = Instantiate(bulletPrefab);
-            var bullet = enemyObject.GetComponent<Bullet>();
-            bullet.Initialize(_mapCoordinates);
+            var bulletObject = Instantiate(bulletPrefab);
+            var bullet = bulletObject.GetComponent<Bullet>();
+            bullet.Initialize(_mapCoordinates, _playerGameObject.transform);
 
             if (isActive)
             {

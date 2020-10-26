@@ -8,23 +8,27 @@ namespace PlayerController
     {
         private MapCoordinates _mapCoordinates;
         private Rigidbody2D _rigidbody;
+        private Transform _playerTransform;
         public bool IsDead { get; private set; }
         public Action OnActivate { get; set; } = () => { };
         public Action OnDeactivate { get; set; } = () => { };
 
-        public void Initialize(MapCoordinates mapCoordinates)
+        public void Initialize(MapCoordinates mapCoordinates, Transform playerTransform)
         {
             _mapCoordinates = mapCoordinates;
             _rigidbody = GetComponent<Rigidbody2D>();
+            _playerTransform = playerTransform;
         }
 
         public void Activate()
         {
             OnActivate();
-
-            _rigidbody.AddForce(Vector2.up, ForceMode2D.Impulse);
-            IsDead = false;
             gameObject.SetActive(true);
+
+            var inFrontOfPlayer = _playerTransform.rotation * Vector2.up;
+            transform.position = _playerTransform.position + inFrontOfPlayer;
+            IsDead = false;
+            _rigidbody.AddForce(inFrontOfPlayer * 10, ForceMode2D.Impulse);
         }
 
         public void Deactivate()
@@ -41,6 +45,11 @@ namespace PlayerController
             IsDead = true;
             gameObject.SetActive(false);;
         }
+
+        // public void SetImpulse(Vector2 force)
+        // {
+        //     _rigidbody.AddForce(force, ForceMode2D.Impulse);
+        // }
 
         private void OnCollisionEnter2D(Collision2D other)
         {

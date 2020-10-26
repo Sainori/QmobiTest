@@ -20,6 +20,11 @@ namespace PlayerController
             SetupControl(inputSystem);
         }
 
+        public Vector2 GetCurrentPosition()
+        {
+            return transform.position;
+        }
+
         private void SetupControl(IInputSystem inputSystem)
         {
             inputSystem.OnUp += OnUp;
@@ -62,6 +67,7 @@ namespace PlayerController
         {
             var bullet = _bulletManager.GetPoolObject();
             bullet.Activate();
+            // bullet.SetImpulse(transform.localRotation * Vector3.up * accelerationMultiplier);
         }
     }
 }
