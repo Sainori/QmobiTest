@@ -4,8 +4,10 @@ using UnityEngine;
 
 namespace PlayerController
 {
-    public class Bullet : MonoBehaviour, IPoolObject
+    public class Bullet : MonoBehaviour, IPoolObject, IKillable
     {
+        [SerializeField] private int forceMultiplier = 30;
+
         private MapCoordinates _mapCoordinates;
         private Rigidbody2D _rigidbody;
         private Transform _playerTransform;
@@ -28,7 +30,7 @@ namespace PlayerController
             var inFrontOfPlayer = _playerTransform.rotation * Vector2.up;
             transform.position = _playerTransform.position + inFrontOfPlayer;
             IsDead = false;
-            _rigidbody.AddForce(inFrontOfPlayer * 10, ForceMode2D.Impulse);
+            _rigidbody.AddForce(inFrontOfPlayer * forceMultiplier, ForceMode2D.Impulse);
         }
 
         public void Deactivate()
@@ -45,11 +47,6 @@ namespace PlayerController
             IsDead = true;
             gameObject.SetActive(false);;
         }
-
-        // public void SetImpulse(Vector2 force)
-        // {
-        //     _rigidbody.AddForce(force, ForceMode2D.Impulse);
-        // }
 
         private void OnCollisionEnter2D(Collision2D other)
         {
@@ -68,6 +65,11 @@ namespace PlayerController
                 return;
             }
 
+            Deactivate();
+        }
+
+        public void TakeDamage()
+        {
             Deactivate();
         }
     }

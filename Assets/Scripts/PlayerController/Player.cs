@@ -9,6 +9,7 @@ namespace PlayerController
     {
         private Rigidbody2D _rigidbody2D;
         [SerializeField] private float accelerationMultiplier = 1f;
+        [SerializeField] private float maxVelocityMagnitude = 10f;
         [Range(0.1f, 1f)] [SerializeField] private float breakMultiplier = 0.5f;
 
         private IPoolManager<Bullet> _bulletManager;
@@ -45,17 +46,18 @@ namespace PlayerController
 
         private void OnLeft()
         {
-            transform.Rotate(Vector3.forward * accelerationMultiplier);
+            transform.Rotate(Vector3.forward);
         }
 
         private void OnRight()
         {
-            transform.Rotate(Vector3.back * accelerationMultiplier);
+            transform.Rotate(Vector3.back);
         }
 
         private void OnUp()
         {
             _rigidbody2D.AddForce(transform.localRotation * Vector3.up * accelerationMultiplier);
+            _rigidbody2D.velocity = Vector2.ClampMagnitude(_rigidbody2D.velocity, maxVelocityMagnitude);
         }
 
         private void OnDown()
