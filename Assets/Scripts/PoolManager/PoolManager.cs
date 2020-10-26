@@ -17,11 +17,6 @@ namespace PoolManager
             CreateStartPool(startCount);
         }
 
-        public PoolManager()
-        {
-            throw new NotImplementedException();
-        }
-
         private void CreateStartPool(int startCount, bool startState = false)
         {
             for (int i = 0; i < startCount; i++)

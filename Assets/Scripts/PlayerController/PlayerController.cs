@@ -14,24 +14,63 @@ namespace PlayerController
         [SerializeField] private float cornerTolerance = 3f;
         [SerializeField] private float teleportOffset = 1f;
 
-        private TeleportSystem _teleportSystem;
-        private IPoolManager<Bullet> _bulletManager;
-        private MapCoordinates _mapCoordinates;
+        [SerializeField] private int maxLives = 3;
+        [SerializeField] private int currentLives;
+
         private GameObject _playerGameObject;
+
+        private IInputSystem _inputSystem;
+        private MapCoordinates _mapCoordinates;
+        private TeleportSystem _teleportSystem;
+
+        private IPoolManager<Bullet> _bulletManager;
+        private IPoolManager<Player> _playerManager;
+        private Player _currentPlayer;
+
+        public bool IsGameOver()
+        {
+            return currentLives <= 0;
+        }
 
         public void Initialize(IInputSystem inputSystem, MapCoordinates mapCoordinates)
         {
-            _mapCoordinates = mapCoordinates;
-            _playerGameObject = Instantiate(playerPrefab);
-            var player = _playerGameObject.GetComponent<IPlayer>();
+            currentLives = maxLives;
+            _inputSystem = inputSystem;
 
-            _bulletManager = new PoolManager<Bullet>(CreateObject, 5);
-            player.Initialize(inputSystem, _bulletManager);
+            _mapCoordinates = mapCoordinates;
+            _playerManager = new PoolManager<Player>(CreatePlayer, 1);
+            _bulletManager = new PoolManager<Bullet>(CreateBullet, 5);
 
             _teleportSystem = new TeleportSystem(_mapCoordinates, _playerGameObject.transform, teleportOffset, cornerTolerance);
         }
 
-        private Bullet CreateObject(bool isActive)
+        private Player CreatePlayer(bool isActive)
+        {
+            _playerGameObject = Instantiate(playerPrefab);
+            var player = _playerGameObject.GetComponent<Player>();
+            player.OnFire += () =>
+            {
+                var bullet = _bulletManager.GetPoolObject();
+                bullet.Activate();
+            };
+
+            player.Initialize(_inputSystem);
+
+
+            player.gameObject.SetActive(false);
+            // if (isActive)
+            // {
+                // player.Activate();
+            // }
+            // else
+            // {
+                // player.Deactivate();
+            // }
+
+            return player;
+        }
+
+        private Bullet CreateBullet(bool isActive)
         {
             var bulletObject = Instantiate(bulletPrefab);
             var bullet = bulletObject.GetComponent<Bullet>();
@@ -53,6 +92,20 @@ namespace PlayerController
         {
             _teleportSystem.DirectUpdate();
             _bulletManager.UpdateEnabledObjects();
+
+            if (currentLives <= 0 || _currentPlayer != null)
+            {
+                Debug.Log($"Current lives {currentLives}");
+                return;
+            }
+
+            _currentPlayer = _playerManager.GetPoolObject();
+            _currentPlayer.Activate();
+            _currentPlayer.OnDeactivate += () =>
+            {
+                _currentPlayer = null;
+                currentLives--;
+            };
         }
     }
 }

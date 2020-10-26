@@ -30,6 +30,12 @@ public class GameManager : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (_playerController.IsGameOver())
+        {
+            Time.timeScale = 0;
+            return;
+        }
+
         _playerController.DirectUpdate();
         _enemyController.DirectUpdate();
     }

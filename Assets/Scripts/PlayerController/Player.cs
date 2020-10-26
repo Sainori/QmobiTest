@@ -1,3 +1,4 @@
+using System;
 using InputSystem.Interfaces;
 using PlayerController.Interfaces;
 using PoolManager.Interfaces;
@@ -5,25 +6,23 @@ using UnityEngine;
 
 namespace PlayerController
 {
-    public class Player : MonoBehaviour, IPlayer
+    public class Player : MonoBehaviour, IPlayer, IPoolObject, IKillable
     {
         private Rigidbody2D _rigidbody2D;
         [SerializeField] private float accelerationMultiplier = 1f;
         [SerializeField] private float maxVelocityMagnitude = 10f;
         [Range(0.1f, 1f)] [SerializeField] private float breakMultiplier = 0.5f;
 
-        private IPoolManager<Bullet> _bulletManager;
+        public IPoolManager<Bullet> BulletManager { get; private set; }
+        private IInputSystem _inputSystem;
 
-        public void Initialize(IInputSystem inputSystem, IPoolManager<Bullet> bulletManger)
+        public Action OnFire { get; set; } = () => { };
+
+
+        public void Initialize(IInputSystem inputSystem)
         {
-            _bulletManager = bulletManger;
+            _inputSystem = inputSystem;
             _rigidbody2D = transform.GetComponent<Rigidbody2D>();
-            SetupControl(inputSystem);
-        }
-
-        public Vector2 GetCurrentPosition()
-        {
-            return transform.position;
         }
 
         private void SetupControl(IInputSystem inputSystem)
@@ -65,11 +64,42 @@ namespace PlayerController
             _rigidbody2D.AddForce(_rigidbody2D.velocity * -breakMultiplier);
         }
 
-        private void OnFire()
+        public bool IsDead { get; private set; }
+        public Action OnActivate { get; set; } = () => { };
+        public Action OnDeactivate { get; set; } = () => { };
+        public void Activate()
         {
-            var bullet = _bulletManager.GetPoolObject();
-            bullet.Activate();
-            // bullet.SetImpulse(transform.localRotation * Vector3.up * accelerationMultiplier);
+            SetupControl(_inputSystem);
+            OnActivate();
+
+            IsDead = false;
+            gameObject.SetActive(true);
+        }
+
+        public void Deactivate()
+        {
+            OnDeactivate();
+
+            ResetControl(_inputSystem);
+            transform.position = Vector3.zero;
+            transform.rotation = Quaternion.identity;
+            transform.localScale = Vector3.one;
+
+            OnActivate = null;
+            OnDeactivate = null;
+
+            IsDead = true;
+            gameObject.SetActive(false);
+        }
+
+        public void DirectUpdate()
+        {
+            // throw new NotImplementedException();
+        }
+
+        public void TakeDamage()
+        {
+            Deactivate();
         }
     }
 }
