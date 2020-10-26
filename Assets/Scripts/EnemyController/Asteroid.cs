@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace EnemyController
 {
-    public class Asteroid : Enemy
+    public class Asteroid : Enemy, IKillable
     {
         private const int AsteroidScale = 10;
         private bool _isJustSpawned;
@@ -81,6 +81,11 @@ namespace EnemyController
                 return;
             }
 
+            Deactivate();
+        }
+
+        public void TakeDamage()
+        {
             Deactivate();
         }
     }

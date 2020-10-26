@@ -1,5 +1,6 @@
 using InputSystem.Interfaces;
 using PlayerController.Interfaces;
+using PoolManager.Interfaces;
 using UnityEngine;
 
 namespace PlayerController
@@ -8,10 +9,13 @@ namespace PlayerController
     {
         private Rigidbody2D _rigidbody2D;
         [SerializeField] private float accelerationMultiplier = 1f;
-        [Range(0.1f, 1f)] [SerializeField] private float breakMultiplier = 0.5f; 
+        [Range(0.1f, 1f)] [SerializeField] private float breakMultiplier = 0.5f;
 
-        public void Initialize(IInputSystem inputSystem)
+        private IPoolManager<Bullet> _bulletManager;
+
+        public void Initialize(IInputSystem inputSystem, IPoolManager<Bullet> bulletManger)
         {
+            _bulletManager = bulletManger;
             _rigidbody2D = transform.GetComponent<Rigidbody2D>();
             SetupControl(inputSystem);
         }
@@ -22,6 +26,7 @@ namespace PlayerController
             inputSystem.OnDown += OnDown;
             inputSystem.OnRight += OnRight;
             inputSystem.OnLeft += OnLeft;
+            inputSystem.OnSpace += OnFire;
         }
 
         private void ResetControl(IInputSystem inputSystem)
@@ -30,6 +35,7 @@ namespace PlayerController
             inputSystem.OnDown -= OnDown;
             inputSystem.OnRight -= OnRight;
             inputSystem.OnLeft -= OnLeft;
+            inputSystem.OnSpace -= OnFire;
         }
 
         private void OnLeft()
@@ -50,6 +56,12 @@ namespace PlayerController
         private void OnDown()
         {
             _rigidbody2D.AddForce(_rigidbody2D.velocity * -breakMultiplier);
+        }
+
+        private void OnFire()
+        {
+            var bullet = _bulletManager.GetPoolObject();
+            bullet.Activate();
         }
     }
 }

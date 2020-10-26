@@ -31,6 +31,7 @@ namespace EnemyController
         }
         
 
+        //TODO: it must be in another class, I think
         private Asteroid CreateObject(bool isActive)
         {
             var enemyObject = Instantiate(enemyPrefab);

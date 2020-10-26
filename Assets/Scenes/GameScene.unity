@@ -278,6 +278,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 610988536171483653, guid: 3013f2e62b572488db6e86591f28dadf,
     type: 3}
+  bulletPrefab: {fileID: 7195796589864613816, guid: 2d944f51595d34982bdb880d240778c4,
+    type: 3}
   cornerTolerance: 3
   teleportOffset: 1
 --- !u!114 &1946100129
