@@ -1,20 +1,17 @@
-using System;
 using EnemyController.Interfaces;
 using UnityEngine;
 
 namespace EnemyController
 {
-    public class Asteroid : MonoBehaviour, IEnemy
+    public class Asteroid : Enemy
     {
-        private bool _justSpawned;
+        private const int AsteroidScale = 10;
+        private bool _isJustSpawned;
+
         private MapCoordinates _mapCoordinates;
         private Rigidbody2D _rigidbody;
         private SpawnPointGenerator _spawnPointGenerator;
         private StartForceGenerator _startForceGenerator;
-
-        public bool IsDead { get; private set; }
-        public Action OnActivate { get; set; } = () => { };
-        public Action OnDeactivate { get; set; } = () => { };
 
         public void Initialize(MapCoordinates mapCoordinates, SpawnPointGenerator spawnPointGenerator,
             StartForceGenerator startForceGenerator)
@@ -25,48 +22,36 @@ namespace EnemyController
             _mapCoordinates = mapCoordinates;
         }
 
-        public void Activate()
+        public new void Activate()
         {
             if (!IsDead)
             {
                 return;
             }
 
-            OnActivate();
-            gameObject.SetActive(true);
+            base.Activate();
 
-            IsDead = false;
-            _justSpawned = true;
-
+            transform.localScale = Vector3.one * AsteroidScale;
+            _isJustSpawned = true;
             var spawnPoint = _spawnPointGenerator.GetSpawnPoint();
             transform.position = spawnPoint;
             _rigidbody.AddForce(_startForceGenerator.GetStartForce(spawnPoint), ForceMode2D.Impulse);
         }
 
-        public void Deactivate()
+        public new void Deactivate()
         {
             if (IsDead)
             {
                 return;
             }
 
-            OnDeactivate();
-
-            transform.position = Vector3.zero;
-            transform.rotation = Quaternion.identity;
-
+            _isJustSpawned = false;
             _rigidbody.velocity = Vector2.zero;
 
-            OnActivate = null;
-            OnDeactivate = null;
-
-            IsDead = true;
-            _justSpawned = false;
-
-            gameObject.SetActive(false);
+            base.Deactivate();
         }
 
-        public void DirectUpdate()
+        public override void DirectUpdate()
         {
             if (IsDead)
             {
@@ -80,14 +65,14 @@ namespace EnemyController
         private void TryDestroy()
         {
             var isOutOfMap = _mapCoordinates.IsOutOfMap(transform.position);
-            if (isOutOfMap && _justSpawned)
+            if (isOutOfMap && _isJustSpawned)
             {
                 return;
             }
 
-            if (!isOutOfMap && _justSpawned)
+            if (!isOutOfMap && _isJustSpawned)
             {
-                _justSpawned = false;
+                _isJustSpawned = false;
                 return;
             }
 

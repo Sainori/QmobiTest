@@ -17,10 +17,9 @@ namespace EnemyController
         private float _time = 0f;
         private const float SpawnDelay = 0.5f;
 
-
-        private List<IEnemy> _enemies = new List<IEnemy>();
+        private List<Asteroid> _enemies = new List<Asteroid>();
         private MapCoordinates _mapCoordinates;
-        private PoolManager<IEnemy> _poolManager;
+        private PoolManager<Asteroid> _poolManager;
 
         public void Initialize(MapCoordinates mapCoordinates)
         {
@@ -28,14 +27,14 @@ namespace EnemyController
             _startForceGenerator = new StartForceGenerator(mapCoordinates, minStartForce, maxStartForce);
             _spawnPointGenerator = new SpawnPointGenerator(mapCoordinates, spawnPointOffset);
             _mapCoordinates = mapCoordinates;
-            _poolManager = new PoolManager<IEnemy>(CreateObject, 5);
+            _poolManager = new PoolManager<Asteroid>(CreateObject, 5);
         }
         
 
-        private IEnemy CreateObject(bool isActive)
+        private Asteroid CreateObject(bool isActive)
         {
             var enemyObject = Instantiate(enemyPrefab);
-            var enemy = enemyObject.GetComponent<IEnemy>();
+            var enemy = enemyObject.GetComponent<Asteroid>();
             enemy.Initialize(_mapCoordinates, _spawnPointGenerator, _startForceGenerator);
 
             if (isActive)
