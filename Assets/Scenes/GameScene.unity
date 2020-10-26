@@ -282,6 +282,8 @@ MonoBehaviour:
     type: 3}
   cornerTolerance: 3
   teleportOffset: 1
+  maxLives: 3
+  currentLives: 0
 --- !u!114 &1946100129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -294,7 +296,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e0f5b4097a24e539db523f9515d0800, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 8555803716429006586, guid: 4390103fca5cc46c38a60996cb03d1ad,
+  asteroidPrefab: {fileID: 8555803716429006586, guid: 4390103fca5cc46c38a60996cb03d1ad,
+    type: 3}
+  ufoPrefab: {fileID: 4129249750255427626, guid: 7091cde3a63b54c0e82ff60cb74fb889,
     type: 3}
   spawnPointOffset: 15
   minStartForce: 5

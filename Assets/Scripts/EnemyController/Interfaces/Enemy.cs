@@ -6,7 +6,7 @@ namespace EnemyController.Interfaces
 {
     public class Enemy : MonoBehaviour, IPoolObject
     {
-        public bool IsDead { get; private set; }
+        public bool IsDead { get; private set; } = true;
         public Action OnActivate { get; set; } = () => { };
         public Action OnDeactivate { get; set; } = () => { };
 

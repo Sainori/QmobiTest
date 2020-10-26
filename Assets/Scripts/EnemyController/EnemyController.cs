@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using EnemyController.Interfaces;
 using PoolManager;
 using UnityEngine;
@@ -7,7 +6,9 @@ namespace EnemyController
 {
     public class EnemyController : MonoBehaviour, IEnemyController
     {
-        [SerializeField] private GameObject enemyPrefab;
+        [SerializeField] private GameObject asteroidPrefab;
+        [SerializeField] private GameObject ufoPrefab;
+
         [SerializeField] private float spawnPointOffset;
 
         [SerializeField] private float minStartForce;
@@ -15,11 +16,12 @@ namespace EnemyController
         private SpawnPointGenerator _spawnPointGenerator;
         private StartForceGenerator _startForceGenerator;
         private float _time = 0f;
-        private const float SpawnDelay = 0.5f;
+        private const float SpawnDelay = 0.3f;
 
-        private List<Asteroid> _enemies = new List<Asteroid>();
         private MapCoordinates _mapCoordinates;
-        private PoolManager<Asteroid> _poolManager;
+
+        private PoolManager<Asteroid> _asteroidManager;
+        private PoolManager<Ufo> _ufosManager;
 
         public void Initialize(MapCoordinates mapCoordinates)
         {
@@ -27,32 +29,36 @@ namespace EnemyController
             _startForceGenerator = new StartForceGenerator(mapCoordinates, minStartForce, maxStartForce);
             _spawnPointGenerator = new SpawnPointGenerator(mapCoordinates, spawnPointOffset);
             _mapCoordinates = mapCoordinates;
-            _poolManager = new PoolManager<Asteroid>(CreateObject, 5);
+
+            _ufosManager = new PoolManager<Ufo>(CreateUfo, 3);
+            _asteroidManager = new PoolManager<Asteroid>(CreateAsteroid, 1);
         }
-        
+
+        private Ufo CreateUfo(bool arg)
+        {
+            var ufoObject = Instantiate(ufoPrefab);
+            var ufo = ufoObject.GetComponent<Ufo>();
+            // ufo.Initialize(_spawnPointGenerator);
+
+            ufoObject.SetActive(false);
+            return ufo;
+        }
+
 
         //TODO: it must be in another class, I think
-        private Asteroid CreateObject(bool isActive)
+        private Asteroid CreateAsteroid(bool isActive)
         {
-            var enemyObject = Instantiate(enemyPrefab);
-            var enemy = enemyObject.GetComponent<Asteroid>();
-            enemy.Initialize(_mapCoordinates, _spawnPointGenerator, _startForceGenerator);
+            var asteroidObject = Instantiate(asteroidPrefab);
+            var asteroid = asteroidObject.GetComponent<Asteroid>();
+            asteroid.Initialize(_mapCoordinates, _spawnPointGenerator, _startForceGenerator);
 
-            if (isActive)
-            {
-                enemy.Activate();
-            }
-            else
-            {
-                enemy.Deactivate();
-            }
-
-            return enemy;
+            asteroidObject.SetActive(false);
+            return asteroid;
         }
 
         public void DirectUpdate()
         {
-            _poolManager.UpdateEnabledObjects();
+            _asteroidManager.UpdateEnabledObjects();
             if (!IsNeedToSpawnEnemy())
             {
                 return;
@@ -61,11 +67,14 @@ namespace EnemyController
             SpawnEnemy();
         }
 
-        //TODO: think about creation with 'TRUE'
+        //TODO: add enemy spawn chance
         private void SpawnEnemy()
         {
-            var enemy = _poolManager.GetPoolObject();
-            enemy.Activate();
+            var asteroid = _asteroidManager.GetPoolObject();
+            // var ufo = _ufosManager.GetPoolObject();
+
+            asteroid.Activate();
+            // ufo.Activate();
         }
 
         private bool IsNeedToSpawnEnemy()

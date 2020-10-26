@@ -13,7 +13,6 @@ namespace PlayerController
         [SerializeField] private float maxVelocityMagnitude = 10f;
         [Range(0.1f, 1f)] [SerializeField] private float breakMultiplier = 0.5f;
 
-        public IPoolManager<Bullet> BulletManager { get; private set; }
         private IInputSystem _inputSystem;
 
         public Action OnFire { get; set; } = () => { };
@@ -78,6 +77,7 @@ namespace PlayerController
 
         public void Deactivate()
         {
+            Debug.Log(this.GetHashCode() + " DEACTIVATE");
             OnDeactivate();
 
             ResetControl(_inputSystem);
@@ -95,6 +95,16 @@ namespace PlayerController
         public void DirectUpdate()
         {
             // throw new NotImplementedException();
+        }
+
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            if (other.gameObject.CompareTag(gameObject.tag))
+            {
+                return;
+            }
+
+            other.transform.GetComponent<IKillable>()?.TakeDamage();
         }
 
         public void TakeDamage()

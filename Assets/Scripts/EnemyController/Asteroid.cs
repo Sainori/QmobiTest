@@ -61,7 +61,6 @@ namespace EnemyController
             TryDestroy();
         }
 
-
         private void TryDestroy()
         {
             var isOutOfMap = _mapCoordinates.IsOutOfMap(transform.position);

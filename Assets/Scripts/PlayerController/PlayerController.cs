@@ -1,4 +1,3 @@
-using System;
 using InputSystem.Interfaces;
 using PlayerController.Interfaces;
 using PoolManager;
@@ -16,8 +15,6 @@ namespace PlayerController
 
         [SerializeField] private int maxLives = 3;
         [SerializeField] private int currentLives;
-
-        private GameObject _playerGameObject;
 
         private IInputSystem _inputSystem;
         private MapCoordinates _mapCoordinates;
@@ -37,40 +34,23 @@ namespace PlayerController
 
         public void Initialize(IInputSystem inputSystem, MapCoordinates mapCoordinates)
         {
-            timeBeforeSpawn = spawnDelay; //because we need to spawn player immediately
-
             currentLives = maxLives;
             _inputSystem = inputSystem;
 
             _mapCoordinates = mapCoordinates;
             _playerManager = new PoolManager<Player>(CreatePlayer, 1);
-            _bulletManager = new PoolManager<Bullet>(CreateBullet, 5);
+            SpawnPlayer();
 
-            _teleportSystem = new TeleportSystem(_mapCoordinates, _playerGameObject.transform, teleportOffset, cornerTolerance);
+            _bulletManager = new PoolManager<Bullet>(CreateBullet, 5);
+            _teleportSystem = new TeleportSystem(_mapCoordinates, _currentPlayer.transform, teleportOffset, cornerTolerance);
         }
 
         private Player CreatePlayer(bool isActive)
         {
-            _playerGameObject = Instantiate(playerPrefab);
-            var player = _playerGameObject.GetComponent<Player>();
-            player.OnFire += () =>
-            {
-                var bullet = _bulletManager.GetPoolObject();
-                bullet.Activate();
-            };
-
+            var playerGameObject = Instantiate(playerPrefab);
+            var player = playerGameObject.GetComponent<Player>();
             player.Initialize(_inputSystem);
-
-
             player.gameObject.SetActive(false);
-            // if (isActive)
-            // {
-                // player.Activate();
-            // }
-            // else
-            // {
-                // player.Deactivate();
-            // }
 
             return player;
         }
@@ -79,16 +59,8 @@ namespace PlayerController
         {
             var bulletObject = Instantiate(bulletPrefab);
             var bullet = bulletObject.GetComponent<Bullet>();
-            bullet.Initialize(_mapCoordinates, _playerGameObject.transform);
-
-            if (isActive)
-            {
-                bullet.Activate();
-            }
-            else
-            {
-                bullet.Deactivate();
-            }
+            bullet.Initialize(_mapCoordinates, _currentPlayer.transform);
+            bullet.gameObject.SetActive(false);
 
             return bullet;
         }
@@ -115,15 +87,27 @@ namespace PlayerController
             }
 
             timeBeforeSpawn = 0;
+            SpawnPlayer();
+        }
 
+        private void SpawnPlayer()
+        {
+            Debug.Log("SPAWN");
             _currentPlayer = _playerManager.GetPoolObject();
-            _currentPlayer.Activate();
+            _currentPlayer.OnFire += () =>
+            {
+                Debug.Log("FIRE");
+                var bullet = _bulletManager.GetPoolObject();
+                bullet.Activate();
+            };
 
             _currentPlayer.OnDeactivate += () =>
             {
                 _currentPlayer = null;
                 currentLives--;
             };
+
+            _currentPlayer.Activate();
         }
     }
 }
