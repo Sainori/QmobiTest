@@ -4,7 +4,7 @@ namespace EnemyController.Interfaces
 {
     public interface IEnemy : IPoolObject
     {
-        void Initialize(MapCoordinates mapCoordinates);
-        void DirectUpdate();
+        void Initialize(MapCoordinates mapCoordinates, SpawnPointGenerator spawnPointGenerator,
+            StartForceGenerator startForceGenerator);
     }
 }

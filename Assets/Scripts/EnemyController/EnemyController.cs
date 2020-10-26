@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using EnemyController.Interfaces;
+using PoolManager;
 using UnityEngine;
 
 namespace EnemyController
@@ -19,6 +20,7 @@ namespace EnemyController
 
         private List<IEnemy> _enemies = new List<IEnemy>();
         private MapCoordinates _mapCoordinates;
+        private PoolManager<IEnemy> _poolManager;
 
         public void Initialize(MapCoordinates mapCoordinates)
         {
@@ -26,11 +28,35 @@ namespace EnemyController
             _startForceGenerator = new StartForceGenerator(mapCoordinates, minStartForce, maxStartForce);
             _spawnPointGenerator = new SpawnPointGenerator(mapCoordinates, spawnPointOffset);
             _mapCoordinates = mapCoordinates;
+            _poolManager = new PoolManager<IEnemy>(CreateObject, 5);
+        }
+        
+
+        private IEnemy CreateObject(bool isActive)
+        {
+            var spawnPoint = _spawnPointGenerator.GetSpawnPoint();
+            var startForce = _startForceGenerator.GetStartForce(spawnPoint);
+
+            var enemyObject = Instantiate(enemyPrefab);
+
+            var enemy = enemyObject.GetComponent<IEnemy>();
+            enemy.Initialize(_mapCoordinates, _spawnPointGenerator, _startForceGenerator);
+
+            if (isActive)
+            {
+                enemy.Activate();
+            }
+            else
+            {
+                enemy.Deactivate();
+            }
+
+            return enemy;
         }
 
         public void DirectUpdate()
         {
-            UpdateEnemies();
+            _poolManager.UpdateEnabledObjects();
             if (!IsNeedToSpawnEnemy())
             {
                 return;
@@ -39,30 +65,16 @@ namespace EnemyController
             SpawnEnemy();
         }
 
-        private void UpdateEnemies()
-        {
-            for (var index = 0; index < _enemies.Count; index++)
-            {
-                var enemy = _enemies[index];
-                if (enemy == null || enemy.IsDead)
-                {
-                    _enemies.Remove(enemy);
-                    index--;
-                    continue;
-                }
-
-                enemy.DirectUpdate();
-            }
-        }
-
         private void SpawnEnemy()
         {
-            var spawnPoint = _spawnPointGenerator.GetSpawnPoint();
-            var enemyObject = Instantiate(enemyPrefab, spawnPoint, Quaternion.identity);
-            enemyObject.GetComponent<Rigidbody2D>().AddForce(_startForceGenerator.GetStartForce(spawnPoint), ForceMode2D.Impulse);
-            var enemy = enemyObject.GetComponent<IEnemy>();
-            enemy.Initialize(_mapCoordinates);
-            _enemies.Add(enemy);
+            // var spawnPoint = _spawnPointGenerator.GetSpawnPoint();
+            // var enemyObject = Instantiate(enemyPrefab, spawnPoint, Quaternion.identity);
+            // enemyObject.GetComponent<Rigidbody2D>().AddForce(_startForceGenerator.GetStartForce(spawnPoint), ForceMode2D.Impulse);
+            // var enemy = enemyObject.GetComponent<IEnemy>();
+            // enemy.Initialize(_mapCoordinates);
+            // _enemies.Add(enemy);
+            var enemy = _poolManager.GetPoolObject();
+            enemy.Activate();
         }
 
         private bool IsNeedToSpawnEnemy()
