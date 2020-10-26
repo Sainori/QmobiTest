@@ -27,6 +27,9 @@ namespace PlayerController
         private IPoolManager<Player> _playerManager;
         private Player _currentPlayer;
 
+        private float spawnDelay = 1f;
+        private float timeBeforeSpawn = 0;
+
         public bool IsGameOver()
         {
             return currentLives <= 0;
@@ -34,6 +37,8 @@ namespace PlayerController
 
         public void Initialize(IInputSystem inputSystem, MapCoordinates mapCoordinates)
         {
+            timeBeforeSpawn = spawnDelay; //because we need to spawn player immediately
+
             currentLives = maxLives;
             _inputSystem = inputSystem;
 
@@ -93,14 +98,27 @@ namespace PlayerController
             _teleportSystem.DirectUpdate();
             _bulletManager.UpdateEnabledObjects();
 
+            TrySpawnPlayer();
+        }
+
+        private void TrySpawnPlayer()
+        {
             if (currentLives <= 0 || _currentPlayer != null)
             {
-                Debug.Log($"Current lives {currentLives}");
                 return;
             }
 
+            if (timeBeforeSpawn <= spawnDelay)
+            {
+                timeBeforeSpawn += Time.deltaTime;
+                return;
+            }
+
+            timeBeforeSpawn = 0;
+
             _currentPlayer = _playerManager.GetPoolObject();
             _currentPlayer.Activate();
+
             _currentPlayer.OnDeactivate += () =>
             {
                 _currentPlayer = null;
