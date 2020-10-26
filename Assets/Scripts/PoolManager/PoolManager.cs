@@ -17,11 +17,11 @@ namespace PoolManager
             CreateStartPool(startCount);
         }
 
-        private void CreateStartPool(int startCount)
+        private void CreateStartPool(int startCount, bool startState = false)
         {
             for (int i = 0; i < startCount; i++)
             {
-                _disabledObjects.Push(_createObject.Invoke(false));
+                _disabledObjects.Push(_createObject.Invoke(startState));
             }
         }
 

@@ -27,6 +27,11 @@ namespace EnemyController
 
         public void Activate()
         {
+            if (!IsDead)
+            {
+                return;
+            }
+
             OnActivate();
             gameObject.SetActive(true);
 
@@ -40,6 +45,11 @@ namespace EnemyController
 
         public void Deactivate()
         {
+            if (IsDead)
+            {
+                return;
+            }
+
             OnDeactivate();
 
             transform.position = Vector3.zero;
@@ -86,7 +96,6 @@ namespace EnemyController
                 return;
             }
 
-            IsDead = true;
             Deactivate();
         }
     }
