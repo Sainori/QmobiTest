@@ -41,9 +41,9 @@ namespace EnemyController
             _rigidbody.AddForce(_startForceGenerator.GetStartForce(spawnPoint), ForceMode2D.Impulse);
         }
 
-        public override void Deactivate()
+        public override void Deactivate(bool force = false)
         {
-            if (IsDead)
+            if (IsDead && !force)
             {
                 return;
             }

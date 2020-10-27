@@ -9,6 +9,8 @@ namespace InputSystem.Interfaces
         Action OnUp { get; set; }
         Action OnDown { get; set; }
         Action OnSpace { get; set; }
+        Action OnRestart { get; set; }
         void DirectUpdate();
+        void Reset();
     }
 }

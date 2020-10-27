@@ -4,5 +4,6 @@ namespace PoolManager.Interfaces
     {
         T GetPoolObject();
         void UpdateEnabledObjects();
+        void DeactivateAll();
     }
 }

@@ -1,12 +1,11 @@
 using System;
 using InputSystem.Interfaces;
 using PlayerController.Interfaces;
-using PoolManager.Interfaces;
 using UnityEngine;
 
 namespace PlayerController
 {
-    public class Player : MonoBehaviour, IPlayer, IPoolObject, IKillable, ITarget
+    public class Player : MonoBehaviour, IPlayer
     {
         [SerializeField] private float accelerationMultiplier = 1f;
         [SerializeField] private float maxVelocityMagnitude = 10f;
@@ -25,6 +24,11 @@ namespace PlayerController
         {
             _inputSystem = inputSystem;
             _rigidbody2D = transform.GetComponent<Rigidbody2D>();
+        }
+
+        public Transform GetTransform()
+        {
+            return transform;
         }
 
         private void SetupControl(IInputSystem inputSystem)
@@ -81,9 +85,9 @@ namespace PlayerController
             gameObject.SetActive(true);
         }
 
-        public void Deactivate()
+        public void Deactivate(bool force = false)
         {
-            if (IsDead)
+            if (IsDead && !force)
             {
                 return;
             }
@@ -97,6 +101,7 @@ namespace PlayerController
 
             OnActivate = () => { };
             OnDeactivate = () => { };
+            OnFire = () => { };
 
             IsDead = true;
             gameObject.SetActive(false);
@@ -113,15 +118,10 @@ namespace PlayerController
                 return;
             }
 
-            TakeDamage();
-        }
-
-        public void TakeDamage()
-        {
             Deactivate();
         }
 
-        public Vector2 GetCurrentPosition()
+        public Vector3 GetCurrentPosition()
         {
             return transform.position;
         }
@@ -129,6 +129,11 @@ namespace PlayerController
         bool ITarget.IsDead()
         {
             return IsDead;
+        }
+
+        public Quaternion GetLocalRotation()
+        {
+            return transform.localRotation;
         }
     }
 }

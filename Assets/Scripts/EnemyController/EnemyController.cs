@@ -40,6 +40,7 @@ namespace EnemyController
         public void Initialize(MapCoordinates mapCoordinates, ITarget target, ScoreCounter scoreCounter)
         {
             _time = 0f;
+            currentStage = 0;
             _target = target;
             _scoreCounter = scoreCounter;
 
@@ -47,8 +48,8 @@ namespace EnemyController
             _spawnPointGenerator = new SpawnPointGenerator(mapCoordinates, spawnPointOffset);
             _mapCoordinates = mapCoordinates;
 
-            _ufosManager = new PoolManager<Ufo>(CreateUfo, 3);
-            _asteroidManager = new PoolManager<Asteroid>(CreateAsteroid, 1);
+            _ufosManager = _ufosManager ?? new PoolManager<Ufo>(CreateUfo, 3);
+            _asteroidManager = _asteroidManager ?? new PoolManager<Asteroid>(CreateAsteroid, 1);
         }
 
         private Ufo CreateUfo(bool arg)
@@ -87,6 +88,14 @@ namespace EnemyController
             }
 
             SpawnEnemy();
+        }
+
+        public void Reset()
+        {
+            _time = 0;
+            currentStage = 0;
+            _ufosManager.DeactivateAll();
+            _asteroidManager.DeactivateAll();
         }
 
         private void TryToUpdateStage()

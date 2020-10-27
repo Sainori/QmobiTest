@@ -50,5 +50,11 @@ namespace UiController
                 _playerLives.Add(lifeIcon);
             }
         }
+
+        public void Reset()
+        {
+            UpdateLives(0);
+            UpdateScore(0);
+        }
     }
 }

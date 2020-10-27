@@ -22,13 +22,15 @@ namespace PlayerController
         private TeleportSystem _teleportSystem;
 
         private IPoolManager<Bullet> _bulletManager;
-        private IPoolManager<Player> _playerManager;
-        private Player _currentPlayer;
+        private IPoolManager<IPlayer> _playerManager;
+
+        private IPlayer _currentPlayer;
+        private Transform _currentPlayerTransform;
 
         private float spawnDelay = 1f;
-        private float timeBeforeSpawn = 0;
+        private float _timeBeforeSpawn;
 
-        public Action<uint> OnLivesChange { get; set; } = lives => { }; 
+        public Action<uint> OnLivesChange { get; set; } = lives => { };
 
         public bool IsGameOver()
         {
@@ -41,14 +43,14 @@ namespace PlayerController
             _inputSystem = inputSystem;
 
             _mapCoordinates = mapCoordinates;
-            _playerManager = new PoolManager<Player>(CreatePlayer, 1);
+            _playerManager = _playerManager ?? new PoolManager<IPlayer>(CreatePlayer, 1);
             SpawnPlayer();
 
-            _bulletManager = new PoolManager<Bullet>(CreateBullet, 1);
-            _teleportSystem = new TeleportSystem(_mapCoordinates, _currentPlayer.transform, teleportOffset, cornerTolerance);
+            _bulletManager = _bulletManager ?? new PoolManager<Bullet>(CreateBullet, 1);
+            _teleportSystem = new TeleportSystem(_mapCoordinates, _currentPlayerTransform, teleportOffset, cornerTolerance);
         }
 
-        private Player CreatePlayer(bool isActive)
+        private IPlayer CreatePlayer(bool isActive)
         {
             var playerGameObject = Instantiate(playerPrefab);
             var player = playerGameObject.GetComponent<Player>();
@@ -62,7 +64,7 @@ namespace PlayerController
         {
             var bulletObject = Instantiate(bulletPrefab);
             var bullet = bulletObject.GetComponent<Bullet>();
-            bullet.Initialize(_mapCoordinates, _currentPlayer.transform);
+            bullet.Initialize(_mapCoordinates, _currentPlayer);
             bullet.gameObject.SetActive(false);
 
             return bullet;
@@ -83,21 +85,23 @@ namespace PlayerController
                 return;
             }
 
-            if (timeBeforeSpawn <= spawnDelay)
+            if (_timeBeforeSpawn <= spawnDelay)
             {
-                timeBeforeSpawn += Time.deltaTime;
+                _timeBeforeSpawn += Time.deltaTime;
                 return;
             }
 
-            timeBeforeSpawn = 0;
+            _timeBeforeSpawn = 0;
             SpawnPlayer();
         }
 
         private void SpawnPlayer()
         {
             _currentPlayer = _playerManager.GetPoolObject();
+            _currentPlayerTransform = _currentPlayer.GetTransform();
             _currentPlayer.OnFire += () =>
             {
+                Debug.Log("On Fire");
                 var bullet = _bulletManager.GetPoolObject();
                 bullet.Activate();
             };
@@ -120,6 +124,13 @@ namespace PlayerController
         public uint GetMaxLives()
         {
             return (uint) maxLives;
+        }
+
+        public void Reset()
+        {
+            _timeBeforeSpawn = 0;
+            _bulletManager.DeactivateAll();
+            _playerManager.DeactivateAll();
         }
     }
 }

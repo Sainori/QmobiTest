@@ -1,25 +1,26 @@
 using System;
+using PlayerController.Interfaces;
 using PoolManager.Interfaces;
 using UnityEngine;
 
 namespace PlayerController
 {
-    public class Bullet : MonoBehaviour, IPoolObject, IKillable
+    public class Bullet : MonoBehaviour, IPoolObject
     {
         [SerializeField] private int forceMultiplier = 30;
 
         private MapCoordinates _mapCoordinates;
         private Rigidbody2D _rigidbody;
-        private Transform _playerTransform;
+        private ITarget _playerTarget;
         public bool IsDead { get; private set; } = true;
         public Action OnActivate { get; set; } = () => { };
         public Action OnDeactivate { get; set; } = () => { };
 
-        public void Initialize(MapCoordinates mapCoordinates, Transform playerTransform)
+        public void Initialize(MapCoordinates mapCoordinates, ITarget playerTarget)
         {
             _mapCoordinates = mapCoordinates;
             _rigidbody = GetComponent<Rigidbody2D>();
-            _playerTransform = playerTransform;
+            _playerTarget = playerTarget;
         }
 
         public void Activate()
@@ -32,15 +33,15 @@ namespace PlayerController
             OnActivate();
             gameObject.SetActive(true);
 
-            var inFrontOfPlayer = _playerTransform.rotation * Vector2.up;
-            transform.position = _playerTransform.position + inFrontOfPlayer;
+            var inFrontOfPlayer = _playerTarget.GetLocalRotation() * Vector2.up;
+            transform.position = _playerTarget.GetCurrentPosition() + inFrontOfPlayer;
             IsDead = false;
             _rigidbody.AddForce(inFrontOfPlayer * forceMultiplier, ForceMode2D.Impulse);
         }
 
-        public void Deactivate()
+        public void Deactivate(bool force = false)
         {
-            if (IsDead)
+            if (IsDead && !force)
             {
                 return;
             }

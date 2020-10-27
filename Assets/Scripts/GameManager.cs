@@ -21,13 +21,43 @@ public class GameManager : MonoBehaviour
         _enemyController = GetComponent<IEnemyController>();
         _uiController = GetComponent<UiController.UiController>();
 
-        _scoreCounter = new ScoreCounter();
+        Initialize();
+    }
 
+    private void Initialize()
+    {
+        _scoreCounter = new ScoreCounter();
         _mapCoordinates = new MapCoordinates(mainCamera);
         _playerController.Initialize(_inputSystem, _mapCoordinates);
         _enemyController.Initialize(_mapCoordinates, _playerController.GetTarget(), _scoreCounter);
 
+        _inputSystem.OnRestart += OnRestart;
         _uiController.Initialize(_scoreCounter, _playerController);
+    }
+
+    private void OnRestart()
+    {
+        if (!_playerController.IsGameOver())
+        {
+            return;
+        }
+
+        Restart();
+    }
+
+    private void Restart()
+    {
+        _inputSystem.OnRestart -= OnRestart;
+
+        _inputSystem.Reset();
+        _scoreCounter.ResetScore();
+        _playerController.Reset();
+        _enemyController.Reset();
+        _uiController.Reset();
+
+        Initialize();
+
+        Time.timeScale = 1;
     }
 
     private void Update()
@@ -40,8 +70,6 @@ public class GameManager : MonoBehaviour
         if (_playerController.IsGameOver())
         {
             Time.timeScale = 0;
-            Debug.Log(_scoreCounter.GetScore());
-            _scoreCounter.ResetScore();
             return;
         }
 

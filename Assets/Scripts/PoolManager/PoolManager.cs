@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using PoolManager.Interfaces;
+using UnityEngine;
 
 namespace PoolManager
 {
@@ -21,7 +22,13 @@ namespace PoolManager
 
         private void CreateStartPool(int startCount, bool startState = false)
         {
-            for (int i = 0; i < startCount; i++)
+            var difference = startCount - _disabledObjects.Count;
+            if (difference <= 0)
+            {
+                return;
+            }
+
+            for (int i = 0; i < difference; i++)
             {
                 _disabledObjects.Push(_createObject.Invoke(startState));
             }
@@ -41,15 +48,26 @@ namespace PoolManager
         {
             for (var index = 0; index < _enabledObjects.Count; index++)
             {
-                var enemy = _enabledObjects[index];
-                if (enemy == null || enemy.IsDead)
+                var poolObject = _enabledObjects[index];
+                if (poolObject == null || poolObject.IsDead)
                 {
-                    _enabledObjects.Remove(enemy);
+                    _enabledObjects.Remove(poolObject);
                     index--;
                     continue;
                 }
 
-                enemy.DirectUpdate();
+                poolObject.DirectUpdate();
+            }
+        }
+
+        public void DeactivateAll()
+        {
+            for (var index = 0; index < _enabledObjects.Count; index++)
+            {
+                var poolObject = _enabledObjects[index];
+                poolObject.Deactivate(true);
+                _enabledObjects.Remove(poolObject);
+                index--;
             }
         }
 

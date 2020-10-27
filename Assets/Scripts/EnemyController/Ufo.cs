@@ -38,9 +38,9 @@ namespace EnemyController
             base.Activate();
         }
 
-        public override void Deactivate()
+        public override void Deactivate(bool force = false)
         {
-            if (IsDead)
+            if (IsDead && !force)
             {
                 return;
             }
@@ -61,7 +61,7 @@ namespace EnemyController
                 return;
             }
 
-            _rigidbody.velocity = (_target.GetCurrentPosition() - (Vector2) transform.position).normalized * velocityMultiplier;
+            _rigidbody.velocity = (_target.GetCurrentPosition() - transform.position).normalized * velocityMultiplier;
         }
     }
 }

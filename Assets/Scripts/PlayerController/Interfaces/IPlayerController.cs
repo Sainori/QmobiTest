@@ -11,5 +11,6 @@ namespace PlayerController.Interfaces
         ITarget GetTarget();
         uint GetMaxLives();
         Action<uint> OnLivesChange { get; set; }
+        void Reset();
     }
 }

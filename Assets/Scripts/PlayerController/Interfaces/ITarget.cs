@@ -4,7 +4,8 @@ namespace PlayerController.Interfaces
 {
     public interface ITarget
     {
-        Vector2 GetCurrentPosition();
         bool IsDead();
+        Vector3 GetCurrentPosition();
+        Quaternion GetLocalRotation();
     }
 }
