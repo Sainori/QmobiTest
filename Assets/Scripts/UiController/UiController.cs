@@ -1,14 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using PlayerController.Interfaces;
+using UiController.Interfaces;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace UiController
 {
-    public class UiController : MonoBehaviour
+    public class UiController : MonoBehaviour, IUiController
     {
-        [SerializeField]private string quitLabelTemplate = "HOLD ESC FOR {0} SECONDS TO QUIT";
+        [SerializeField] private string quitLabelTemplate = "HOLD ESC FOR {0} SECONDS TO QUIT";
 
         [SerializeField] private GameObject playerIcon;
         [SerializeField] private Transform livesContainer;

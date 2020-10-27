@@ -1,7 +1,7 @@
-﻿using System;
-using EnemyController.Interfaces;
+﻿using EnemyController.Interfaces;
 using InputSystem.Interfaces;
 using PlayerController.Interfaces;
+using UiController.Interfaces;
 using UnityEditor;
 using UnityEngine;
 using Screen = UiController.Screen;
@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     private IPlayerController _playerController;
     private IEnemyController _enemyController;
     private ScoreCounter _scoreCounter;
-    private UiController.UiController _uiController;
+    private IUiController _uiController;
     private GameStatus _status;
 
     private void Awake()
@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
         _inputSystem = GetComponent<IInputSystem>();
         _playerController = GetComponent<IPlayerController>();
         _enemyController = GetComponent<IEnemyController>();
-        _uiController = GetComponent<UiController.UiController>();
+        _uiController = GetComponent<IUiController>();
 
         _inputSystem.OnEscape = OnEscape;
         _inputSystem.OnEscapeUp = () => _timeBeforeQuit = 0;

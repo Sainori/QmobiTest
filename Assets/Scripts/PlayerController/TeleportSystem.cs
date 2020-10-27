@@ -1,8 +1,9 @@
+using PlayerController.Interfaces;
 using UnityEngine;
 
 namespace PlayerController
 {
-    public class TeleportSystem
+    public class TeleportSystem : ITeleportSystem
     {
         private readonly Transform _targetTransform;
         private readonly MapCoordinates _mapCoordinates;

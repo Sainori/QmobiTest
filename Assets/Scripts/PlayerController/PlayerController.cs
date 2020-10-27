@@ -19,7 +19,7 @@ namespace PlayerController
 
         private IInputSystem _inputSystem;
         private MapCoordinates _mapCoordinates;
-        private TeleportSystem _teleportSystem;
+        private ITeleportSystem _teleportSystem;
 
         private IPoolManager<IBullet> _bulletManager;
         private IPoolManager<IPlayer> _playerManager;
