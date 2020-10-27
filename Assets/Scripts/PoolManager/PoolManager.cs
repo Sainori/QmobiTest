@@ -17,6 +17,8 @@ namespace PoolManager
             CreateStartPool(startCount);
         }
 
+        public uint GetEnabledObjectsCount() => (uint) _enabledObjects.Count;
+
         private void CreateStartPool(int startCount, bool startState = false)
         {
             for (int i = 0; i < startCount; i++)

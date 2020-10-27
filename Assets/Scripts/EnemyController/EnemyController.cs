@@ -15,15 +15,25 @@ namespace EnemyController
 
         [SerializeField] private float minStartForce;
         [SerializeField] private float maxStartForce;
-        private SpawnPointGenerator _spawnPointGenerator;
-        private StartForceGenerator _startForceGenerator;
+
         private float _time = 0f;
-        private const float SpawnDelay = 0.3f;
+        private const float SpawnDelay = 1.5f;
+
+        [SerializeField] private float asteroidChance = 0.7f;
+
+        [SerializeField] private uint currentStage = 0;
+        [SerializeField] private uint maxStage = 3;
+
+        [SerializeField] private uint[] stagesMaxScore = {0, 500, 1000, 1500};
+        [SerializeField] private uint maxEnemiesCount = 10;
 
         private MapCoordinates _mapCoordinates;
+        private SpawnPointGenerator _spawnPointGenerator;
+        private StartForceGenerator _startForceGenerator;
 
-        private PoolManager<Asteroid> _asteroidManager;
         private PoolManager<Ufo> _ufosManager;
+        private PoolManager<Asteroid> _asteroidManager;
+
         private ITarget _target;
         private ScoreCounter _scoreCounter;
 
@@ -68,7 +78,10 @@ namespace EnemyController
             _asteroidManager.UpdateEnabledObjects();
             _ufosManager.UpdateEnabledObjects();
 
-            if (!IsNeedToSpawnEnemy())
+            TryToUpdateStage();
+
+            var enemiesCount = _asteroidManager.GetEnabledObjectsCount() + _ufosManager.GetEnabledObjectsCount();
+            if (!IsNeedToSpawnEnemy(enemiesCount))
             {
                 return;
             }
@@ -76,29 +89,42 @@ namespace EnemyController
             SpawnEnemy();
         }
 
-        //TODO: add enemy spawn chance
+        private void TryToUpdateStage()
+        {
+            var score = _scoreCounter.GetScore();
+            if (score < stagesMaxScore[currentStage] || currentStage == maxStage)
+            {
+                return;
+            }
+
+            currentStage++;
+        }
+
         private void SpawnEnemy()
         {
             var enemy = GetEnemyForSpawn();
             enemy.Activate();
-
             enemy.OnDeactivate += () => _scoreCounter.AddScore(enemy.GetScoreReward());
         }
 
         private Enemy GetEnemyForSpawn()
         {
-            // var flag = Random.Range(0f, 1f) > 0.5f;
-            // if (flag)
-            // {
-                // return _asteroidManager.GetPoolObject();
-            // }
+            if (Random.Range(0f, 1f) <= asteroidChance)
+            {
+                return _asteroidManager.GetPoolObject();
+            }
 
             return _ufosManager.GetPoolObject();
         }
 
-        private bool IsNeedToSpawnEnemy()
+        private bool IsNeedToSpawnEnemy(uint enemiesCount)
         {
-            if(_time < SpawnDelay)
+            if (enemiesCount > maxEnemiesCount * currentStage)
+            {
+                return false;
+            }
+
+            if(_time < SpawnDelay / currentStage)
             {
                 _time += Time.deltaTime;
                 return false;
