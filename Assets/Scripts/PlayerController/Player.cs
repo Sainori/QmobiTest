@@ -8,15 +8,18 @@ namespace PlayerController
 {
     public class Player : MonoBehaviour, IPlayer, IPoolObject, IKillable, ITarget
     {
-        private Rigidbody2D _rigidbody2D;
         [SerializeField] private float accelerationMultiplier = 1f;
         [SerializeField] private float maxVelocityMagnitude = 10f;
         [Range(0.1f, 1f)] [SerializeField] private float breakMultiplier = 0.5f;
 
+        private Rigidbody2D _rigidbody2D;
         private IInputSystem _inputSystem;
 
-        public Action OnFire { get; set; } = () => { };
+        public bool IsDead { get; private set; } = true;
 
+        public Action OnFire { get; set; } = () => { };
+        public Action OnActivate { get; set; } = () => { };
+        public Action OnDeactivate { get; set; } = () => { };
 
         public void Initialize(IInputSystem inputSystem)
         {
@@ -63,9 +66,6 @@ namespace PlayerController
             _rigidbody2D.AddForce(_rigidbody2D.velocity * -breakMultiplier);
         }
 
-        public bool IsDead { get; private set; } = true;
-        public Action OnActivate { get; set; } = () => { };
-        public Action OnDeactivate { get; set; } = () => { };
         public void Activate()
         {
             //TODO: remove multiple IsDead check (Bullet, Enemy, Player)
@@ -95,8 +95,8 @@ namespace PlayerController
             transform.rotation = Quaternion.identity;
             transform.localScale = Vector3.one;
 
-            OnActivate = null;
-            OnDeactivate = null;
+            OnActivate = () => { };
+            OnDeactivate = () => { };
 
             IsDead = true;
             gameObject.SetActive(false);

@@ -51,8 +51,8 @@ namespace PlayerController
             transform.rotation = Quaternion.identity;
             transform.localScale = Vector3.one;
 
-            OnActivate = null;
-            OnDeactivate = null;
+            OnActivate = () => { };
+            OnDeactivate = () => { };
 
             IsDead = true;
             gameObject.SetActive(false);

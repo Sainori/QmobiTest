@@ -28,9 +28,9 @@ namespace EnemyController
             transform.rotation = Quaternion.identity;
             transform.localScale = Vector3.one;
 
-            OnActivate = null;
-            OnDeactivate = null;
-            OnKill = null;
+            OnActivate = () => { };
+            OnDeactivate = () => { };
+            OnKill = () => { };
 
             IsDead = true;
             gameObject.SetActive(false);
