@@ -1,3 +1,4 @@
+using System;
 using InputSystem.Interfaces;
 using PlayerController.Interfaces;
 using PoolManager;
@@ -26,6 +27,8 @@ namespace PlayerController
 
         private float spawnDelay = 1f;
         private float timeBeforeSpawn = 0;
+
+        public Action<uint> OnLivesChange { get; set; } = lives => { }; 
 
         public bool IsGameOver()
         {
@@ -103,6 +106,7 @@ namespace PlayerController
             {
                 _currentPlayer = null;
                 currentLives--;
+                OnLivesChange((uint) currentLives);
             };
 
             _currentPlayer.Activate();
@@ -111,6 +115,11 @@ namespace PlayerController
         public ITarget GetTarget()
         {
             return _currentPlayer;
+        }
+
+        public uint GetMaxLives()
+        {
+            return (uint) maxLives;
         }
     }
 }

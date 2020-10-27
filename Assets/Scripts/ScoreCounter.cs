@@ -1,24 +1,29 @@
+using System;
+
 public class ScoreCounter
 {
-    private uint _score;
+    private uint _currentScore;
+    public Action<uint> OnScoreChange;
 
     public ScoreCounter()
     {
-        _score = 0;
+        _currentScore = 0;
     }
 
     public uint GetScore()
     {
-        return _score;
+        return _currentScore;
     }
-    
+
     public void AddScore(uint score)
     {
-        _score += score;
+        _currentScore += score;
+        OnScoreChange(_currentScore);
     }
 
     public void ResetScore()
     {
-        _score = 0;
+        _currentScore = 0;
+        OnScoreChange(_currentScore);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using InputSystem.Interfaces;
 
 namespace PlayerController.Interfaces
@@ -7,7 +8,8 @@ namespace PlayerController.Interfaces
         bool IsGameOver();
         void Initialize(IInputSystem inputSystem, MapCoordinates mapCoordinates);
         void DirectUpdate();
-
         ITarget GetTarget();
+        uint GetMaxLives();
+        Action<uint> OnLivesChange { get; set; }
     }
 }
