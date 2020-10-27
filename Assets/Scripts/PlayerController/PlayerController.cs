@@ -101,7 +101,6 @@ namespace PlayerController
             _currentPlayerTransform = _currentPlayer.GetTransform();
             _currentPlayer.OnFire += () =>
             {
-                Debug.Log("On Fire");
                 var bullet = _bulletManager.GetPoolObject();
                 bullet.Activate();
             };
