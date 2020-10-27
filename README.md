@@ -1,6 +1,8 @@
 ## Qmobi Test  
 > Аналог игры Atari Asteroids (1979)
 
+[WebGL Version](https://simmer.io/@Sainori/qmobitest)
+
 Цель игры:  
 Набрать максимальное кол-во очков.
 
