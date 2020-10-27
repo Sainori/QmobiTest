@@ -41,7 +41,7 @@ namespace PlayerController
             _playerManager = new PoolManager<Player>(CreatePlayer, 1);
             SpawnPlayer();
 
-            _bulletManager = new PoolManager<Bullet>(CreateBullet, 5);
+            _bulletManager = new PoolManager<Bullet>(CreateBullet, 1);
             _teleportSystem = new TeleportSystem(_mapCoordinates, _currentPlayer.transform, teleportOffset, cornerTolerance);
         }
 

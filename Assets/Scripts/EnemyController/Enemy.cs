@@ -2,16 +2,16 @@ using System;
 using PoolManager.Interfaces;
 using UnityEngine;
 
-namespace EnemyController.Interfaces
+namespace EnemyController
 {
-    public class Enemy : MonoBehaviour, IPoolObject
+    public class Enemy : MonoBehaviour, IPoolObject, IKillable
     {
         public bool IsDead { get; private set; } = true;
         public Action OnActivate { get; set; } = () => { };
         public Action OnDeactivate { get; set; } = () => { };
 
 
-        public void Activate()
+        public virtual void Activate()
         {
             OnActivate();
 
@@ -19,7 +19,7 @@ namespace EnemyController.Interfaces
             gameObject.SetActive(true);
         }
 
-        public void Deactivate()
+        public virtual void Deactivate()
         {
             OnDeactivate();
 
@@ -35,5 +35,9 @@ namespace EnemyController.Interfaces
         }
 
         public virtual void DirectUpdate() { }
+        public virtual void TakeDamage()
+        {
+            Deactivate();
+        }
     }
 }

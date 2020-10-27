@@ -1,20 +1,26 @@
-using EnemyController.Interfaces;
-using UnityEngine;
-
 namespace EnemyController
 {
     public class Ufo : Enemy
     {
-        private Transform _targetTransform;
+        // private Transform _targetTransform;
+        private SpawnPointGenerator _spawnPointGenerator;
 
-        public void Initialize(Transform targetTransform)
+        public void Initialize(SpawnPointGenerator spawnPointGenerator)
         {
-            _targetTransform = targetTransform;
+            _spawnPointGenerator = spawnPointGenerator;
+            // _targetTransform = targetTransform;
         }
-        // public void Initialize(ITarget target)
-        // {
-            // _target = target;
-        // }
+
+        public override void Activate()
+        {
+            // transform.localScale = Vector3.one * AsteroidScale;
+            // _isJustSpawned = true;
+            var spawnPoint = _spawnPointGenerator.GetSpawnPoint();
+            transform.position = spawnPoint;
+            // _rigidbody.AddForce(_startForceGenerator.GetStartForce(spawnPoint), ForceMode2D.Impulse);
+
+            base.Activate();
+        }
 
         public override void DirectUpdate()
         {

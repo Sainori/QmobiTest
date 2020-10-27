@@ -11,7 +11,7 @@ namespace PlayerController
         private MapCoordinates _mapCoordinates;
         private Rigidbody2D _rigidbody;
         private Transform _playerTransform;
-        public bool IsDead { get; private set; }
+        public bool IsDead { get; private set; } = true;
         public Action OnActivate { get; set; } = () => { };
         public Action OnDeactivate { get; set; } = () => { };
 
@@ -24,6 +24,11 @@ namespace PlayerController
 
         public void Activate()
         {
+            if (!IsDead)
+            {
+                return;
+            }
+
             OnActivate();
             gameObject.SetActive(true);
 
@@ -35,6 +40,11 @@ namespace PlayerController
 
         public void Deactivate()
         {
+            if (IsDead)
+            {
+                return;
+            }
+
             OnDeactivate();
 
             transform.position = Vector3.zero;
@@ -45,7 +55,7 @@ namespace PlayerController
             OnDeactivate = null;
 
             IsDead = true;
-            gameObject.SetActive(false);;
+            gameObject.SetActive(false);
         }
 
         private void OnCollisionEnter2D(Collision2D other)
@@ -55,6 +65,7 @@ namespace PlayerController
                 return;
             }
 
+            Debug.Log("ON COLLISION ENTER " + GetHashCode() + " " + other.gameObject.GetHashCode());
             other.transform.GetComponent<IKillable>()?.TakeDamage();
         }
 

@@ -1,5 +1,6 @@
 using EnemyController.Interfaces;
 using PoolManager;
+using PoolManager.Interfaces;
 using UnityEngine;
 
 namespace EnemyController
@@ -38,7 +39,7 @@ namespace EnemyController
         {
             var ufoObject = Instantiate(ufoPrefab);
             var ufo = ufoObject.GetComponent<Ufo>();
-            // ufo.Initialize(_spawnPointGenerator);
+            ufo.Initialize(_spawnPointGenerator);
 
             ufoObject.SetActive(false);
             return ufo;
@@ -70,11 +71,19 @@ namespace EnemyController
         //TODO: add enemy spawn chance
         private void SpawnEnemy()
         {
-            var asteroid = _asteroidManager.GetPoolObject();
-            // var ufo = _ufosManager.GetPoolObject();
+            var enemy = GetEnemyForSpawn();
+            enemy.Activate();
+        }
 
-            asteroid.Activate();
-            // ufo.Activate();
+        private IPoolObject GetEnemyForSpawn()
+        {
+            var flag = Random.Range(0f, 1f) > 0.5f;
+            if (flag)
+            {
+                return _asteroidManager.GetPoolObject();
+            }
+
+            return _ufosManager.GetPoolObject();
         }
 
         private bool IsNeedToSpawnEnemy()

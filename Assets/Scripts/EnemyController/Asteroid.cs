@@ -1,9 +1,8 @@
-using EnemyController.Interfaces;
 using UnityEngine;
 
 namespace EnemyController
 {
-    public class Asteroid : Enemy, IKillable
+    public class Asteroid : Enemy
     {
         private const int AsteroidScale = 10;
         private bool _isJustSpawned;
@@ -22,7 +21,7 @@ namespace EnemyController
             _mapCoordinates = mapCoordinates;
         }
 
-        public new void Activate()
+        public override void Activate()
         {
             if (!IsDead)
             {
@@ -38,8 +37,9 @@ namespace EnemyController
             _rigidbody.AddForce(_startForceGenerator.GetStartForce(spawnPoint), ForceMode2D.Impulse);
         }
 
-        public new void Deactivate()
+        public override void Deactivate()
         {
+            Debug.Log(GetHashCode() + " DEACTIVATE ");
             if (IsDead)
             {
                 return;
@@ -83,10 +83,10 @@ namespace EnemyController
             Deactivate();
         }
 
-        public void TakeDamage()
-        {
-            Deactivate();
-        }
+        // public void TakeDamage()
+        // {
+            // Deactivate();
+        // }
 
         private void OnCollisionEnter2D(Collision2D other)
         {
