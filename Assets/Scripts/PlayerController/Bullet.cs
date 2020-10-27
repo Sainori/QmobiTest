@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PlayerController
 {
-    public class Bullet : PoolObject
+    public class Bullet : PoolObject, IBullet
     {
         [SerializeField] private int forceMultiplier = 30;
 

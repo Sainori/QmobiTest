@@ -21,7 +21,7 @@ namespace PlayerController
         private MapCoordinates _mapCoordinates;
         private TeleportSystem _teleportSystem;
 
-        private IPoolManager<Bullet> _bulletManager;
+        private IPoolManager<IBullet> _bulletManager;
         private IPoolManager<IPlayer> _playerManager;
 
         private IPlayer _currentPlayer;
@@ -47,8 +47,8 @@ namespace PlayerController
             _playerManager = _playerManager ?? new PoolManager<IPlayer>(playerPrefab, PlayerInitialization, 1);
             SpawnPlayer();
 
-            void BulletInitialization(Bullet bullet) => bullet.Initialize(_mapCoordinates, _currentPlayer);
-            _bulletManager = _bulletManager ?? new PoolManager<Bullet>(bulletPrefab, BulletInitialization, 1);
+            void BulletInitialization(IBullet bullet) => bullet.Initialize(_mapCoordinates, _currentPlayer);
+            _bulletManager = _bulletManager ?? new PoolManager<IBullet>(bulletPrefab, BulletInitialization, 1);
             _teleportSystem = new TeleportSystem(_mapCoordinates, _currentPlayerTransform, teleportOffset, cornerTolerance);
         }
 
@@ -81,10 +81,8 @@ namespace PlayerController
         {
             _currentPlayer = _playerManager.GetPoolObject();
             _currentPlayerTransform = _currentPlayer.GetTransform();
-            Debug.Log("Spawn player");
             _currentPlayer.OnFire += () =>
             {
-                Debug.Log("OnFire " + _currentPlayerTransform.GetHashCode());
                 var bullet = _bulletManager.GetPoolObject();
                 bullet.Activate();
             };
