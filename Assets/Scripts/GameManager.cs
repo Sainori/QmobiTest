@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
     {
         if (_timeBeforeQuit < secondsToQuit)
         {
-            _timeBeforeQuit += Time.deltaTime;
+            _timeBeforeQuit += Time.unscaledDeltaTime;
             return;
         }
 
