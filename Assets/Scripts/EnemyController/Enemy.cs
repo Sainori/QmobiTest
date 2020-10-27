@@ -39,5 +39,15 @@ namespace EnemyController
         {
             Deactivate();
         }
+
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            if (other.gameObject.CompareTag(gameObject.tag))
+            {
+                return;
+            }
+
+            other.transform.GetComponent<IKillable>()?.TakeDamage();
+        }
     }
 }

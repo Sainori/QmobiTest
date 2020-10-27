@@ -39,7 +39,6 @@ namespace EnemyController
 
         public override void Deactivate()
         {
-            Debug.Log(GetHashCode() + " DEACTIVATE ");
             if (IsDead)
             {
                 return;
@@ -81,21 +80,6 @@ namespace EnemyController
             }
 
             Deactivate();
-        }
-
-        // public void TakeDamage()
-        // {
-            // Deactivate();
-        // }
-
-        private void OnCollisionEnter2D(Collision2D other)
-        {
-            if (other.gameObject.CompareTag(gameObject.tag))
-            {
-                return;
-            }
-
-            other.transform.GetComponent<IKillable>()?.TakeDamage();
         }
     }
 }
