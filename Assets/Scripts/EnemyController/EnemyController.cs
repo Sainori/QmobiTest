@@ -27,6 +27,9 @@ namespace EnemyController
         [SerializeField] private uint[] stagesMaxScore = {0, 500, 1000, 1500};
         [SerializeField] private uint maxEnemiesCount = 10;
 
+        [SerializeField] private uint startAsteroidCount = 5;
+        [SerializeField] private uint startUfoCount = 3;
+
         private MapCoordinates _mapCoordinates;
         private SpawnPointGenerator _spawnPointGenerator;
         private StartForceGenerator _startForceGenerator;
@@ -50,8 +53,8 @@ namespace EnemyController
 
             void UfoInitialization(Ufo ufo) => ufo.Initialize(_spawnPointGenerator, _target);
             void AsteroidInitialization(Asteroid asteroid) => asteroid.Initialize(_mapCoordinates, _spawnPointGenerator, _startForceGenerator);
-            _ufosManager = _ufosManager ?? new PoolManager<Ufo>(ufoPrefab, UfoInitialization, 3);
-            _asteroidManager = _asteroidManager ?? new PoolManager<Asteroid>(asteroidPrefab, AsteroidInitialization, 1);
+            _ufosManager = _ufosManager ?? new PoolManager<Ufo>(ufoPrefab, UfoInitialization, startUfoCount);
+            _asteroidManager = _asteroidManager ?? new PoolManager<Asteroid>(asteroidPrefab, AsteroidInitialization, startAsteroidCount);
         }
 
         public void DirectUpdate()

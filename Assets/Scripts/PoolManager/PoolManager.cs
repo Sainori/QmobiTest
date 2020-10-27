@@ -14,7 +14,7 @@ namespace PoolManager
         private List<T> _enabledObjects = new List<T>();
         private Stack<T> _disabledObjects = new Stack<T>();
 
-        public PoolManager(GameObject prefab, Action<T> initialization, int startCount)
+        public PoolManager(GameObject prefab, Action<T> initialization, uint startCount)
         {
             _prefab = prefab;
             _initialization = initialization;
@@ -23,7 +23,7 @@ namespace PoolManager
 
         public uint GetEnabledObjectsCount() => (uint) _enabledObjects.Count;
 
-        private void CreateStartPool(int startCount)
+        private void CreateStartPool(uint startCount)
         {
             var difference = startCount - _disabledObjects.Count;
             if (difference <= 0)

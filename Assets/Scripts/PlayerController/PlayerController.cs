@@ -14,6 +14,8 @@ namespace PlayerController
         [SerializeField] private float cornerTolerance = 3f;
         [SerializeField] private float teleportOffset = 1f;
 
+        [SerializeField] private uint startBulletCount = 6; 
+
         [SerializeField] private int maxLives = 3;
         [SerializeField] private int currentLives;
 
@@ -48,7 +50,7 @@ namespace PlayerController
             SpawnPlayer();
 
             void BulletInitialization(IBullet bullet) => bullet.Initialize(_mapCoordinates, _currentPlayer);
-            _bulletManager = _bulletManager ?? new PoolManager<IBullet>(bulletPrefab, BulletInitialization, 1);
+            _bulletManager = _bulletManager ?? new PoolManager<IBullet>(bulletPrefab, BulletInitialization, startBulletCount);
             _teleportSystem = new TeleportSystem(_mapCoordinates, _currentPlayerTransform, teleportOffset, cornerTolerance);
         }
 
