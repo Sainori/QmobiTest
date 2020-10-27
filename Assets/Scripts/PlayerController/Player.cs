@@ -125,5 +125,10 @@ namespace PlayerController
         {
             return transform.position;
         }
+
+        bool ITarget.IsDead()
+        {
+            return IsDead;
+        }
     }
 }

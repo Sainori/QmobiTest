@@ -6,6 +6,10 @@ namespace EnemyController
     public class Ufo : Enemy
     {
         [SerializeField] private float ufoScale = 10;
+        [SerializeField] private float velocityMultiplier;
+        [SerializeField] private float minVelocityMultiplier = 1f;
+        [SerializeField] private float maxVelocityMultiplier = 5f;
+
         private SpawnPointGenerator _spawnPointGenerator;
         private ITarget _target;
         private Rigidbody2D _rigidbody;
@@ -24,9 +28,9 @@ namespace EnemyController
                 return;
             }
 
+            velocityMultiplier = Random.Range(minVelocityMultiplier, maxVelocityMultiplier);
             transform.localScale = Vector3.one * ufoScale;
-            var spawnPoint = _spawnPointGenerator.GetSpawnPoint();
-            transform.position = spawnPoint;
+            transform.position = _spawnPointGenerator.GetSpawnPoint();
 
             base.Activate();
         }
@@ -48,12 +52,13 @@ namespace EnemyController
 
         private void ChaseTheTarget()
         {
-            if (_target == null)
+            if (_target == null || _target.IsDead())
             {
+                _rigidbody.velocity = Vector2.zero;
                 return;
             }
 
-            _rigidbody.velocity = (_target.GetCurrentPosition() - (Vector2) transform.position).normalized;
+            _rigidbody.velocity = (_target.GetCurrentPosition() - (Vector2) transform.position).normalized * velocityMultiplier;
         }
     }
 }
