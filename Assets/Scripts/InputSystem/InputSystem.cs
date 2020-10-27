@@ -12,6 +12,8 @@ namespace InputSystem
         public Action OnDown { get; set; }
         public Action OnSpace { get; set; }
         public Action OnRestart { get; set; }
+        public Action OnEscape { get; set; }
+        public Action OnEscapeUp { get; set; }
 
         public void DirectUpdate()
         {
@@ -21,6 +23,7 @@ namespace InputSystem
             ProcessKeyInput(KeyCode.LeftArrow, onKey: OnLeft);
             ProcessKeyInput(KeyCode.Space, onKeyDown: OnSpace);
             ProcessKeyInput(KeyCode.R, onKeyDown: OnRestart);
+            ProcessKeyInput(KeyCode.Escape, onKey: OnEscape, onKeyUp:OnEscapeUp);
         }
 
         public void Reset()
