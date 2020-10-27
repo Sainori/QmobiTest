@@ -118,6 +118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   accelerationMultiplier: 3
+  maxVelocityMagnitude: 10
   breakMultiplier: 0.5
 --- !u!61 &1260202071972674457
 BoxCollider2D:

@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
 
         if (Application.platform == RuntimePlatform.WebGLPlayer)
         {
-            OnRestart();
+            _status = GameStatus.End;
             return;
         }
 
