@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using PlayerController.Interfaces;
@@ -10,6 +11,7 @@ namespace UiController
     public class UiController : MonoBehaviour, IUiController
     {
         [SerializeField] private string quitLabelTemplate = "HOLD ESC FOR {0} SECONDS TO QUIT";
+        [SerializeField] private string endGameTextTemplate = "YOUR SCORE IS {0}";
 
         [SerializeField] private GameObject playerIcon;
         [SerializeField] private Transform livesContainer;
@@ -82,7 +84,7 @@ namespace UiController
                 case Screen.End:
                     endGameScreen.SetActive(status);
                     playerScore.gameObject.SetActive(!status);
-                    endGameScreenText.text += $" {playerScore.text}";
+                    endGameScreenText.text = string.Format(endGameTextTemplate, playerScore.text);
                     break;
             }
         }
