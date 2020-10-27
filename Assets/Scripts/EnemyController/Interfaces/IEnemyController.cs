@@ -4,7 +4,7 @@ namespace EnemyController.Interfaces
 {
     public interface IEnemyController
     {
-        void Initialize(MapCoordinates mapCoordinates, ITarget target);
+        void Initialize(MapCoordinates mapCoordinates, ITarget target, ScoreCounter scoreCounter);
         void DirectUpdate();
     }
 }

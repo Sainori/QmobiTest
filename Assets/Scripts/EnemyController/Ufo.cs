@@ -5,6 +5,7 @@ namespace EnemyController
 {
     public class Ufo : Enemy
     {
+        [SerializeField] private uint scoreReward = 50;
         [SerializeField] private float ufoScale = 10;
         [SerializeField] private float velocityMultiplier;
         [SerializeField] private float minVelocityMultiplier = 1f;
@@ -13,6 +14,8 @@ namespace EnemyController
         private SpawnPointGenerator _spawnPointGenerator;
         private ITarget _target;
         private Rigidbody2D _rigidbody;
+
+        public override uint GetScoreReward() => scoreReward;
 
         public void Initialize(SpawnPointGenerator spawnPointGenerator, ITarget target)
         {

@@ -4,6 +4,8 @@ namespace EnemyController
 {
     public class Asteroid : Enemy
     {
+        [SerializeField] private uint scoreReward = 10;
+
         private const int AsteroidScale = 10;
         private bool _isJustSpawned;
 
@@ -11,6 +13,8 @@ namespace EnemyController
         private Rigidbody2D _rigidbody;
         private SpawnPointGenerator _spawnPointGenerator;
         private StartForceGenerator _startForceGenerator;
+
+        public override uint GetScoreReward() => scoreReward;
 
         public void Initialize(MapCoordinates mapCoordinates, SpawnPointGenerator spawnPointGenerator,
             StartForceGenerator startForceGenerator)

@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     private IInputSystem _inputSystem;
     private IPlayerController _playerController;
     private IEnemyController _enemyController;
+    private ScoreCounter _scoreCounter;
 
     private void Awake()
     {
@@ -18,9 +19,10 @@ public class GameManager : MonoBehaviour
         _playerController = GetComponent<IPlayerController>();
         _enemyController = GetComponent<IEnemyController>();
 
+        _scoreCounter = new ScoreCounter();
         _mapCoordinates = new MapCoordinates(mainCamera);
         _playerController.Initialize(_inputSystem, _mapCoordinates);
-        _enemyController.Initialize(_mapCoordinates, _playerController.GetTarget());
+        _enemyController.Initialize(_mapCoordinates, _playerController.GetTarget(), _scoreCounter);
     }
 
     private void Update()
@@ -33,6 +35,8 @@ public class GameManager : MonoBehaviour
         if (_playerController.IsGameOver())
         {
             Time.timeScale = 0;
+            Debug.Log(_scoreCounter.GetScore());
+            _scoreCounter.ResetScore();
             return;
         }
 

@@ -7,7 +7,6 @@ namespace PoolManager.Interfaces
         bool IsDead { get; }
         Action OnActivate { get; set; }
         Action OnDeactivate { get; set; }
-
         void Activate();
         void Deactivate();
         void DirectUpdate();

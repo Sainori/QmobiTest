@@ -25,11 +25,14 @@ namespace EnemyController
         private PoolManager<Asteroid> _asteroidManager;
         private PoolManager<Ufo> _ufosManager;
         private ITarget _target;
+        private ScoreCounter _scoreCounter;
 
-        public void Initialize(MapCoordinates mapCoordinates, ITarget target)
+        public void Initialize(MapCoordinates mapCoordinates, ITarget target, ScoreCounter scoreCounter)
         {
             _time = 0f;
             _target = target;
+            _scoreCounter = scoreCounter;
+
             _startForceGenerator = new StartForceGenerator(mapCoordinates, minStartForce, maxStartForce);
             _spawnPointGenerator = new SpawnPointGenerator(mapCoordinates, spawnPointOffset);
             _mapCoordinates = mapCoordinates;
@@ -78,9 +81,11 @@ namespace EnemyController
         {
             var enemy = GetEnemyForSpawn();
             enemy.Activate();
+
+            enemy.OnDeactivate += () => _scoreCounter.AddScore(enemy.GetScoreReward());
         }
 
-        private IPoolObject GetEnemyForSpawn()
+        private Enemy GetEnemyForSpawn()
         {
             // var flag = Random.Range(0f, 1f) > 0.5f;
             // if (flag)

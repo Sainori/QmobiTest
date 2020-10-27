@@ -49,5 +49,10 @@ namespace EnemyController
 
             other.transform.GetComponent<IKillable>()?.TakeDamage();
         }
+
+        public virtual uint GetScoreReward()
+        {
+            return 0;
+        }
     }
 }
