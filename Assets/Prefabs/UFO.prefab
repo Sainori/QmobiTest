@@ -143,3 +143,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f0c3f389e21463ca84054441e3ccf46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scoreReward: 50
+  ufoScale: 10
+  velocityMultiplier: 0
+  minVelocityMultiplier: 5
+  maxVelocityMultiplier: 10
