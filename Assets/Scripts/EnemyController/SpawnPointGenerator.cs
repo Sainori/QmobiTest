@@ -40,20 +40,20 @@ namespace EnemyController
             switch (spawnArea)
             {
                 case SpawnArea.Up:
-                    minY = _mapCoordinates.UpSideBorder;
+                    minY = _mapCoordinates.UpSideBorder + _offset / 2;
                     maxY = _mapCoordinates.UpSideBorder + _offset;
                     break;
                 case SpawnArea.Right:
-                    minX = _mapCoordinates.RightSideBorder;
+                    minX = _mapCoordinates.RightSideBorder + _offset / 2;
                     maxX = _mapCoordinates.RightSideBorder + _offset;
                     break;
                 case SpawnArea.Down:
                     minY = _mapCoordinates.DownSideBorder - _offset;
-                    maxY = _mapCoordinates.DownSideBorder;
+                    maxY = _mapCoordinates.DownSideBorder - _offset / 2;
                     break;
                 case SpawnArea.Left:
                     minX = _mapCoordinates.LeftSideBorder - _offset;
-                    maxX = _mapCoordinates.LeftSideBorder;
+                    maxX = _mapCoordinates.LeftSideBorder - _offset / 2;
                     break;
             }
 

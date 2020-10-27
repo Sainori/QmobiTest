@@ -10,9 +10,7 @@ namespace EnemyController
         public Action OnActivate { get; set; } = () => { };
         public Action OnDeactivate { get; set; } = () => { };
 
-
         public Action OnKill { get; set; } = () => { };
-
 
         public virtual void Activate()
         {
