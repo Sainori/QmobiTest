@@ -1,8 +1,8 @@
 using EnemyController.Interfaces;
 using PlayerController.Interfaces;
 using PoolManager;
-using PoolManager.Interfaces;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace EnemyController
 {
@@ -48,30 +48,10 @@ namespace EnemyController
             _spawnPointGenerator = new SpawnPointGenerator(mapCoordinates, spawnPointOffset);
             _mapCoordinates = mapCoordinates;
 
-            _ufosManager = _ufosManager ?? new PoolManager<Ufo>(CreateUfo, 3);
-            _asteroidManager = _asteroidManager ?? new PoolManager<Asteroid>(CreateAsteroid, 1);
-        }
-
-        private Ufo CreateUfo(bool arg)
-        {
-            var ufoObject = Instantiate(ufoPrefab);
-            var ufo = ufoObject.GetComponent<Ufo>();
-            ufo.Initialize(_spawnPointGenerator, _target);
-
-            ufoObject.SetActive(false);
-            return ufo;
-        }
-
-
-        //TODO: it must be in another class, I think
-        private Asteroid CreateAsteroid(bool isActive)
-        {
-            var asteroidObject = Instantiate(asteroidPrefab);
-            var asteroid = asteroidObject.GetComponent<Asteroid>();
-            asteroid.Initialize(_mapCoordinates, _spawnPointGenerator, _startForceGenerator);
-
-            asteroidObject.SetActive(false);
-            return asteroid;
+            void UfoInitialization(Ufo ufo) => ufo.Initialize(_spawnPointGenerator, _target);
+            void AsteroidInitialization(Asteroid asteroid) => asteroid.Initialize(_mapCoordinates, _spawnPointGenerator, _startForceGenerator);
+            _ufosManager = _ufosManager ?? new PoolManager<Ufo>(ufoPrefab, UfoInitialization, 3);
+            _asteroidManager = _asteroidManager ?? new PoolManager<Asteroid>(asteroidPrefab, AsteroidInitialization, 1);
         }
 
         public void DirectUpdate()

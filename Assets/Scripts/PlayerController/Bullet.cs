@@ -66,7 +66,7 @@ namespace PlayerController
                 return;
             }
 
-            TakeDamage();
+            Deactivate();
         }
 
         public void DirectUpdate()
@@ -76,11 +76,6 @@ namespace PlayerController
                 return;
             }
 
-            Deactivate();
-        }
-
-        public void TakeDamage()
-        {
             Deactivate();
         }
     }

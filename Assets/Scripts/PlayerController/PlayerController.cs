@@ -43,31 +43,13 @@ namespace PlayerController
             _inputSystem = inputSystem;
 
             _mapCoordinates = mapCoordinates;
-            _playerManager = _playerManager ?? new PoolManager<IPlayer>(CreatePlayer, 1);
+            void PlayerInitialization(IPlayer player) => player.Initialize(_inputSystem);
+            _playerManager = _playerManager ?? new PoolManager<IPlayer>(playerPrefab, PlayerInitialization, 1);
             SpawnPlayer();
 
-            _bulletManager = _bulletManager ?? new PoolManager<Bullet>(CreateBullet, 1);
+            void BulletInitialization(Bullet bullet) => bullet.Initialize(_mapCoordinates, _currentPlayer);
+            _bulletManager = _bulletManager ?? new PoolManager<Bullet>(bulletPrefab, BulletInitialization, 1);
             _teleportSystem = new TeleportSystem(_mapCoordinates, _currentPlayerTransform, teleportOffset, cornerTolerance);
-        }
-
-        private IPlayer CreatePlayer(bool isActive)
-        {
-            var playerGameObject = Instantiate(playerPrefab);
-            var player = playerGameObject.GetComponent<Player>();
-            player.Initialize(_inputSystem);
-            player.gameObject.SetActive(false);
-
-            return player;
-        }
-
-        private Bullet CreateBullet(bool isActive)
-        {
-            var bulletObject = Instantiate(bulletPrefab);
-            var bullet = bulletObject.GetComponent<Bullet>();
-            bullet.Initialize(_mapCoordinates, _currentPlayer);
-            bullet.gameObject.SetActive(false);
-
-            return bullet;
         }
 
         public void DirectUpdate()
