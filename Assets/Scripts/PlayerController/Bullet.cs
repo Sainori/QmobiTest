@@ -65,8 +65,7 @@ namespace PlayerController
                 return;
             }
 
-            Debug.Log("ON COLLISION ENTER " + GetHashCode() + " " + other.gameObject.GetHashCode());
-            other.transform.GetComponent<IKillable>()?.TakeDamage();
+            TakeDamage();
         }
 
         public void DirectUpdate()

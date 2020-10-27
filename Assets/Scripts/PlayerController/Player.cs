@@ -113,7 +113,7 @@ namespace PlayerController
                 return;
             }
 
-            other.transform.GetComponent<IKillable>()?.TakeDamage();
+            TakeDamage();
         }
 
         public void TakeDamage()

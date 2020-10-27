@@ -104,7 +104,7 @@ namespace EnemyController
         {
             var enemy = GetEnemyForSpawn();
             enemy.Activate();
-            enemy.OnDeactivate += () => _scoreCounter.AddScore(enemy.GetScoreReward());
+            enemy.OnKill += () => _scoreCounter.AddScore(enemy.GetScoreReward());
         }
 
         private Enemy GetEnemyForSpawn()

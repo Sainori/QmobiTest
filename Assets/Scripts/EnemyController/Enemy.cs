@@ -11,6 +11,9 @@ namespace EnemyController
         public Action OnDeactivate { get; set; } = () => { };
 
 
+        public Action OnKill { get; set; } = () => { };
+
+
         public virtual void Activate()
         {
             OnActivate();
@@ -29,14 +32,22 @@ namespace EnemyController
 
             OnActivate = null;
             OnDeactivate = null;
+            OnKill = null;
 
             IsDead = true;
             gameObject.SetActive(false);
         }
 
         public virtual void DirectUpdate() { }
+
         public virtual void TakeDamage()
         {
+            if (IsDead)
+            {
+                return;
+            }
+
+            OnKill();
             Deactivate();
         }
 
@@ -47,7 +58,7 @@ namespace EnemyController
                 return;
             }
 
-            other.transform.GetComponent<IKillable>()?.TakeDamage();
+            TakeDamage();
         }
 
         public virtual uint GetScoreReward()
