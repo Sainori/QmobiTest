@@ -19,11 +19,26 @@ namespace EnemyController
 
         public override void Activate()
         {
+            if (!IsDead)
+            {
+                return;
+            }
+
             transform.localScale = Vector3.one * ufoScale;
             var spawnPoint = _spawnPointGenerator.GetSpawnPoint();
             transform.position = spawnPoint;
 
             base.Activate();
+        }
+
+        public override void Deactivate()
+        {
+            if (IsDead)
+            {
+                return;
+            }
+
+            base.Deactivate();
         }
 
         public override void DirectUpdate()

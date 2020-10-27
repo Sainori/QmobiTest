@@ -63,11 +63,17 @@ namespace PlayerController
             _rigidbody2D.AddForce(_rigidbody2D.velocity * -breakMultiplier);
         }
 
-        public bool IsDead { get; private set; }
+        public bool IsDead { get; private set; } = true;
         public Action OnActivate { get; set; } = () => { };
         public Action OnDeactivate { get; set; } = () => { };
         public void Activate()
         {
+            //TODO: remove multiple IsDead check (Bullet, Enemy, Player)
+            if (!IsDead)
+            {
+                return;
+            }
+
             SetupControl(_inputSystem);
             OnActivate();
 
@@ -77,6 +83,11 @@ namespace PlayerController
 
         public void Deactivate()
         {
+            if (IsDead)
+            {
+                return;
+            }
+
             OnDeactivate();
 
             ResetControl(_inputSystem);
