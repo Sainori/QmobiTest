@@ -26,26 +26,15 @@ namespace EnemyController
 
         public override void Activate()
         {
-            if (!IsDead)
-            {
-                return;
-            }
+            base.Activate();
+            OnUfoActivate();
+        }
 
+        private void OnUfoActivate()
+        {
             velocityMultiplier = Random.Range(minVelocityMultiplier, maxVelocityMultiplier);
             transform.localScale = Vector3.one * ufoScale;
             transform.position = _spawnPointGenerator.GetSpawnPoint();
-
-            base.Activate();
-        }
-
-        public override void Deactivate(bool force = false)
-        {
-            if (IsDead && !force)
-            {
-                return;
-            }
-
-            base.Deactivate();
         }
 
         public override void DirectUpdate()

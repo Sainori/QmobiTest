@@ -81,8 +81,10 @@ namespace PlayerController
         {
             _currentPlayer = _playerManager.GetPoolObject();
             _currentPlayerTransform = _currentPlayer.GetTransform();
+            Debug.Log("Spawn player");
             _currentPlayer.OnFire += () =>
             {
+                Debug.Log("OnFire " + _currentPlayerTransform.GetHashCode());
                 var bullet = _bulletManager.GetPoolObject();
                 bullet.Activate();
             };

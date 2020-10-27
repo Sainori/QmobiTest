@@ -1,42 +1,20 @@
 using System;
-using PoolManager.Interfaces;
+using PoolManager;
 using UnityEngine;
 
 namespace EnemyController
 {
-    public class Enemy : MonoBehaviour, IPoolObject
+    public class Enemy : PoolObject
     {
-        public bool IsDead { get; private set; } = true;
-        public Action OnActivate { get; set; } = () => { };
-        public Action OnDeactivate { get; set; } = () => { };
-
         public Action OnKill { get; set; } = () => { };
 
-        public virtual void Activate()
+        public override void Deactivate(bool force = false)
         {
-            OnActivate();
-
-            IsDead = false;
-            gameObject.SetActive(true);
-        }
-
-        public virtual void Deactivate(bool force = false)
-        {
-            OnDeactivate();
-
-            transform.position = Vector3.zero;
-            transform.rotation = Quaternion.identity;
-            transform.localScale = Vector3.one;
-
-            OnActivate = () => { };
-            OnDeactivate = () => { };
+            base.Deactivate(force);
             OnKill = () => { };
-
-            IsDead = true;
-            gameObject.SetActive(false);
         }
 
-        public virtual void DirectUpdate() { }
+        public override void DirectUpdate() { }
 
         private void OnCollisionEnter2D(Collision2D other)
         {

@@ -27,13 +27,12 @@ namespace EnemyController
 
         public override void Activate()
         {
-            if (!IsDead)
-            {
-                return;
-            }
-
             base.Activate();
+            OnAsteroidActivate();
+        }
 
+        private void OnAsteroidActivate()
+        {
             transform.localScale = Vector3.one * AsteroidScale;
             _isJustSpawned = true;
             var spawnPoint = _spawnPointGenerator.GetSpawnPoint();
@@ -43,15 +42,9 @@ namespace EnemyController
 
         public override void Deactivate(bool force = false)
         {
-            if (IsDead && !force)
-            {
-                return;
-            }
-
+            base.Deactivate(force);
             _isJustSpawned = false;
             _rigidbody.velocity = Vector2.zero;
-
-            base.Deactivate();
         }
 
         public override void DirectUpdate()

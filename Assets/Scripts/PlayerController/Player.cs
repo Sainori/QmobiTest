@@ -1,11 +1,12 @@
 using System;
 using InputSystem.Interfaces;
 using PlayerController.Interfaces;
+using PoolManager;
 using UnityEngine;
 
 namespace PlayerController
 {
-    public class Player : MonoBehaviour, IPlayer
+    public class Player : PoolObject, IPlayer
     {
         [SerializeField] private float accelerationMultiplier = 1f;
         [SerializeField] private float maxVelocityMagnitude = 10f;
@@ -14,11 +15,7 @@ namespace PlayerController
         private Rigidbody2D _rigidbody2D;
         private IInputSystem _inputSystem;
 
-        public bool IsDead { get; private set; } = true;
-
         public Action OnFire { get; set; } = () => { };
-        public Action OnActivate { get; set; } = () => { };
-        public Action OnDeactivate { get; set; } = () => { };
 
         public void Initialize(IInputSystem inputSystem)
         {
@@ -70,45 +67,17 @@ namespace PlayerController
             _rigidbody2D.AddForce(_rigidbody2D.velocity * -breakMultiplier);
         }
 
-        public void Activate()
+        public override void Activate()
         {
-            //TODO: remove multiple IsDead check (Bullet, Enemy, Player)
-            if (!IsDead)
-            {
-                return;
-            }
-
+            base.Activate();
             SetupControl(_inputSystem);
-            OnActivate();
-
-            IsDead = false;
-            gameObject.SetActive(true);
         }
 
-        public void Deactivate(bool force = false)
+        public override void Deactivate(bool force = false)
         {
-            if (IsDead && !force)
-            {
-                return;
-            }
-
-            OnDeactivate();
-
             ResetControl(_inputSystem);
-            transform.position = Vector3.zero;
-            transform.rotation = Quaternion.identity;
-            transform.localScale = Vector3.one;
-
-            OnActivate = () => { };
-            OnDeactivate = () => { };
             OnFire = () => { };
-
-            IsDead = true;
-            gameObject.SetActive(false);
-        }
-
-        public void DirectUpdate()
-        {
+            base.Deactivate(force);
         }
 
         private void OnCollisionEnter2D(Collision2D other)
