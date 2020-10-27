@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
 
         _mapCoordinates = new MapCoordinates(mainCamera);
         _playerController.Initialize(_inputSystem, _mapCoordinates);
-        _enemyController.Initialize(_mapCoordinates);
+        _enemyController.Initialize(_mapCoordinates, _playerController.GetTarget());
     }
 
     private void Update()

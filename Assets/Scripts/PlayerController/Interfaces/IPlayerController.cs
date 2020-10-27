@@ -7,5 +7,7 @@ namespace PlayerController.Interfaces
         bool IsGameOver();
         void Initialize(IInputSystem inputSystem, MapCoordinates mapCoordinates);
         void DirectUpdate();
+
+        ITarget GetTarget();
     }
 }

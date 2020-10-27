@@ -1,23 +1,27 @@
+using PlayerController.Interfaces;
+using UnityEngine;
+
 namespace EnemyController
 {
     public class Ufo : Enemy
     {
-        // private Transform _targetTransform;
+        [SerializeField] private float ufoScale = 10;
         private SpawnPointGenerator _spawnPointGenerator;
+        private ITarget _target;
+        private Rigidbody2D _rigidbody;
 
-        public void Initialize(SpawnPointGenerator spawnPointGenerator)
+        public void Initialize(SpawnPointGenerator spawnPointGenerator, ITarget target)
         {
+            _target = target;
             _spawnPointGenerator = spawnPointGenerator;
-            // _targetTransform = targetTransform;
+            _rigidbody = GetComponent<Rigidbody2D>();
         }
 
         public override void Activate()
         {
-            // transform.localScale = Vector3.one * AsteroidScale;
-            // _isJustSpawned = true;
+            transform.localScale = Vector3.one * ufoScale;
             var spawnPoint = _spawnPointGenerator.GetSpawnPoint();
             transform.position = spawnPoint;
-            // _rigidbody.AddForce(_startForceGenerator.GetStartForce(spawnPoint), ForceMode2D.Impulse);
 
             base.Activate();
         }
@@ -29,7 +33,12 @@ namespace EnemyController
 
         private void ChaseTheTarget()
         {
-            // _rigidbody.AddForce((_target - transform.position).normalized);
+            if (_target == null)
+            {
+                return;
+            }
+
+            _rigidbody.velocity = (_target.GetCurrentPosition() - (Vector2) transform.position).normalized;
         }
     }
 }

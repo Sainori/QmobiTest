@@ -1,4 +1,5 @@
 using EnemyController.Interfaces;
+using PlayerController.Interfaces;
 using PoolManager;
 using PoolManager.Interfaces;
 using UnityEngine;
@@ -23,10 +24,12 @@ namespace EnemyController
 
         private PoolManager<Asteroid> _asteroidManager;
         private PoolManager<Ufo> _ufosManager;
+        private ITarget _target;
 
-        public void Initialize(MapCoordinates mapCoordinates)
+        public void Initialize(MapCoordinates mapCoordinates, ITarget target)
         {
             _time = 0f;
+            _target = target;
             _startForceGenerator = new StartForceGenerator(mapCoordinates, minStartForce, maxStartForce);
             _spawnPointGenerator = new SpawnPointGenerator(mapCoordinates, spawnPointOffset);
             _mapCoordinates = mapCoordinates;
@@ -39,7 +42,7 @@ namespace EnemyController
         {
             var ufoObject = Instantiate(ufoPrefab);
             var ufo = ufoObject.GetComponent<Ufo>();
-            ufo.Initialize(_spawnPointGenerator);
+            ufo.Initialize(_spawnPointGenerator, _target);
 
             ufoObject.SetActive(false);
             return ufo;
@@ -60,6 +63,8 @@ namespace EnemyController
         public void DirectUpdate()
         {
             _asteroidManager.UpdateEnabledObjects();
+            _ufosManager.UpdateEnabledObjects();
+
             if (!IsNeedToSpawnEnemy())
             {
                 return;
@@ -77,11 +82,11 @@ namespace EnemyController
 
         private IPoolObject GetEnemyForSpawn()
         {
-            var flag = Random.Range(0f, 1f) > 0.5f;
-            if (flag)
-            {
-                return _asteroidManager.GetPoolObject();
-            }
+            // var flag = Random.Range(0f, 1f) > 0.5f;
+            // if (flag)
+            // {
+                // return _asteroidManager.GetPoolObject();
+            // }
 
             return _ufosManager.GetPoolObject();
         }

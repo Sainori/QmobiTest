@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace PlayerController
 {
-    public class Player : MonoBehaviour, IPlayer, IPoolObject, IKillable
+    public class Player : MonoBehaviour, IPlayer, IPoolObject, IKillable, ITarget
     {
         private Rigidbody2D _rigidbody2D;
         [SerializeField] private float accelerationMultiplier = 1f;
@@ -77,7 +77,6 @@ namespace PlayerController
 
         public void Deactivate()
         {
-            Debug.Log(this.GetHashCode() + " DEACTIVATE");
             OnDeactivate();
 
             ResetControl(_inputSystem);
@@ -94,7 +93,6 @@ namespace PlayerController
 
         public void DirectUpdate()
         {
-            // throw new NotImplementedException();
         }
 
         private void OnCollisionEnter2D(Collision2D other)
@@ -110,6 +108,11 @@ namespace PlayerController
         public void TakeDamage()
         {
             Deactivate();
+        }
+
+        public Vector2 GetCurrentPosition()
+        {
+            return transform.position;
         }
     }
 }

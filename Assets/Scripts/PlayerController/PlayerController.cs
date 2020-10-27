@@ -92,11 +92,11 @@ namespace PlayerController
 
         private void SpawnPlayer()
         {
-            Debug.Log("SPAWN");
+            // Debug.Log("SPAWN");
             _currentPlayer = _playerManager.GetPoolObject();
             _currentPlayer.OnFire += () =>
             {
-                Debug.Log("FIRE");
+                // Debug.Log("FIRE");
                 var bullet = _bulletManager.GetPoolObject();
                 bullet.Activate();
             };
@@ -108,6 +108,11 @@ namespace PlayerController
             };
 
             _currentPlayer.Activate();
+        }
+
+        public ITarget GetTarget()
+        {
+            return _currentPlayer;
         }
     }
 }
