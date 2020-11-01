@@ -8,7 +8,8 @@ namespace PlayerController
 {
     public class Player : PoolObject, IPlayer
     {
-        [SerializeField] private float accelerationMultiplier = 1f;
+        [SerializeField] private float rotationPerSecond = 180f;
+        [SerializeField] private float accelerationMultiplier = 5f;
         [SerializeField] private float maxVelocityMagnitude = 10f;
         [Range(0.1f, 1f)] [SerializeField] private float breakMultiplier = 0.5f;
 
@@ -48,12 +49,12 @@ namespace PlayerController
 
         private void OnLeft()
         {
-            transform.Rotate(Vector3.forward * accelerationMultiplier);
+            transform.Rotate(Vector3.forward * rotationPerSecond * Time.deltaTime);
         }
 
         private void OnRight()
         {
-            transform.Rotate(Vector3.back * accelerationMultiplier);
+            transform.Rotate(Vector3.back * rotationPerSecond * Time.deltaTime);
         }
 
         private void OnUp()

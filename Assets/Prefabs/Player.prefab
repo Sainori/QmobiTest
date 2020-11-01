@@ -117,7 +117,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 164305175b04416e912f75e8476090bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  accelerationMultiplier: 3
+  rotationPerSecond: 180
+  accelerationMultiplier: 5
   maxVelocityMagnitude: 10
   breakMultiplier: 0.5
 --- !u!61 &1260202071972674457
